@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.netlify.kaleidoscopic_pixie_b139ed.twa",
+        "sha256_cert_fingerprints": ["7C:4C:24:9A:0C:35:B3:7D:CC:7B:66:26:0B:59:74:40:8E:8F:A7:EC:15:67:66:60:FB:9D:1F:9F:BF:82:75:B2"]
+      }
+    }]

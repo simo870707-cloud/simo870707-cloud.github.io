@@ -1,0 +1,72 @@
+{
+  "id": "/",
+  "name": "CuriO — The Daybook",
+  "short_name": "CuriO",
+  "description": "An almanac of wonder — a calm daily page of facts, history, sky and curiosities.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
+  "theme_color": "#f1e7d2",
+  "background_color": "#f1e7d2",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": [
+    "education",
+    "lifestyle",
+    "books"
+  ],
+  "icons": [
+    {
+      "src": "/icon-192.png?v=2",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png?v=2",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192-maskable.png?v=2",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512-maskable.png?v=2",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-narrow-1.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Today's page — the daily curiosity, on this day in history, and the sky tonight"
+    },
+    {
+      "src": "/screenshot-narrow-2.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Your almanach — reminders and saved curiosities in one calm place"
+    },
+    {
+      "src": "/screenshot-wide-1.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "The Daybook on desktop — a calm daily almanac of wonder"
+    }
+  ]
+}
