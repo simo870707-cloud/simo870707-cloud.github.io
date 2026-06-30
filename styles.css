@@ -421,3 +421,120 @@ body.night .btn.ghost{ color:#C3B4F4 !important; border-color:rgba(195,180,244,.
 /* prevent any element from forcing horizontal overflow */
 html,body{overflow-x:hidden;max-width:100%}
 *{min-width:0}
+
+/* ===== Home/Mind chooser — playful animated tiles ===== */
+.choose{ display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:2px }
+.choose-tile{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:22px 10px;border-radius:16px;border:1px solid var(--line);cursor:pointer;
+  background:linear-gradient(180deg,#fffdf7,#f1ecfb);color:var(--ink);font:inherit;
+  box-shadow:var(--shadow);
+  transition:transform .2s cubic-bezier(.2,.7,.2,1),box-shadow .2s;
+  animation:tileFloat 4.2s ease-in-out infinite;
+}
+.choose-mind{ animation-delay:.5s;background:linear-gradient(180deg,#fffdf7,#ece8fb) }
+.choose-tile:hover,.choose-tile:focus-visible{
+  transform:translateY(-5px) scale(1.035);
+  box-shadow:0 14px 30px rgba(108,92,231,.24);outline:none;
+}
+.choose-tile:active{ transform:scale(.97) }
+.choose-emoji{ font-size:34px;line-height:1;animation:tileBob 3s ease-in-out infinite }
+.choose-mind .choose-emoji{ animation-delay:.4s }
+.choose-label{ font-family:'Cormorant Garamond',serif;font-weight:600;font-size:25px }
+.choose-sub{ font-size:12px;color:var(--ink2);font-style:italic;text-align:center }
+@keyframes tileFloat{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+@keyframes tileBob{ 0%,100%{transform:translateY(0) rotate(-4deg)} 50%{transform:translateY(-4px) rotate(4deg)} }
+@media(prefers-reduced-motion:reduce){ .choose-tile,.choose-emoji{animation:none} }
+
+/* ============================================================
+   THE LIVING EDIT — brand theme  (charcoal · gold · cream)
+   Appended last; overrides the old purple "aurora" skin.
+   ============================================================ */
+:root{
+  --paper:#F4EFE4; --paper2:#ECE3D2; --ink:#2C2A27; --ink2:#6E665A;
+  --green:#8C7B4E; --gold:#B7905A; --line:#E5DBC7; --rule:#CDBC95;
+  --terra:#B7905A; --terra-d:#9C7C46; --terra-bg:#F1E7D5;
+  --shadow:0 6px 20px rgba(70,52,22,.10);
+}
+/* flat cream backdrop; retire the purple aurora sky */
+#aurora-sky{ display:none !important; }
+html,body,body.night{ background:#F4EFE4 !important; color:var(--ink) !important; }
+
+/* surfaces: warm ivory with a soft gold hairline */
+.card,.notecard,.plus,.tool,.note-paper,.sheet-card,
+body.night .card,body.night .notecard,body.night .plus,body.night .tool,body.night .note-paper{
+  background:#FCF9F1 !important; border:1px solid var(--line) !important;
+  box-shadow:0 6px 18px rgba(70,52,22,.08) !important; color:var(--ink) !important;
+}
+.card .frame{ border-color:var(--gold) !important; opacity:.5 !important; }
+
+/* nav + drawer: solid cream */
+.nav,body.night .nav{ background:#F4EFE4 !important; border-bottom:1px solid var(--line) !important;
+  box-shadow:0 2px 14px rgba(70,52,22,.06) !important; }
+.navtitle,body.night .navtitle{ color:var(--ink) !important; }
+#menu,body.night #menu{ background:#F4EFE4 !important; }
+.menu-h{ color:var(--gold) !important; }
+
+/* buttons: charcoal primary, gold CTA, gold-outline ghost */
+.btn{ background:var(--ink) !important; border-color:var(--ink) !important; color:#F7F2E7 !important; }
+.btn.home-explore{ background:var(--gold) !important; border-color:var(--gold) !important; color:#2C2A27 !important; }
+.btn.ghost,body.night .btn.ghost{ background:transparent !important; color:var(--ink) !important; border-color:var(--gold) !important; }
+.btn.gift{ background:transparent !important; border-color:var(--gold) !important; color:var(--gold) !important; }
+
+/* headings / labels */
+.section-h h2,body.night .section-h h2{ color:var(--ink) !important; }
+.masthead .muted,body.night .masthead .muted,body.night .masthead h1{ color:#3A342B !important; }
+.label{ color:var(--gold) !important; }
+
+/* date ribbon + clock */
+.ribbon,.ribbon b,#clock,.clock,
+body.night .ribbon,body.night .ribbon b,body.night #clock,body.night .clock{
+  color:var(--ink) !important; border-color:rgba(183,144,90,.45) !important; }
+
+/* focus ring -> gold */
+:focus-visible,.chip:focus-visible,.back:focus-visible,.qotd:focus-visible,.choose-tile:focus-visible{
+  outline:2px solid var(--gold) !important; outline-offset:2px; }
+
+/* Home / Mind chooser tiles -> ivory with warm edge */
+.choose-tile{ background:#FCF9F1 !important; border:1px solid var(--line) !important;
+  box-shadow:0 6px 18px rgba(70,52,22,.08) !important; }
+.choose-home{ background:linear-gradient(180deg,#FCF9F1,#F2E8D5) !important; }
+.choose-mind{ background:linear-gradient(180deg,#FCF9F1,#EFE5D0) !important; }
+.choose-tile:hover,.choose-tile:focus-visible{ box-shadow:0 12px 26px rgba(160,120,50,.20) !important; }
+.choose-label{ color:var(--ink) !important; }
+.choose-sub{ color:var(--ink2) !important; }
+
+/* category label on fact cards -> gold (was per-category color) */
+.fact .cat{ color:var(--gold) !important; }
+
+/* ===== The Living Edit brand — remaining screens (entire app) ===== */
+/* night-sky card -> deep charcoal, not purple/blue */
+.skycard{ background:linear-gradient(180deg,#3A372F,#26241F) !important; color:#EDE6D6 !important;
+  border:1px solid rgba(183,144,90,.30) !important; }
+.skycard .sub{ color:#C9BFA8 !important; }
+.skycard .moon{ color:#E7D9B8 !important; }
+
+/* Organizer tab segments (To-do / Note / Thought) */
+.tabseg{ background:rgba(44,42,39,.06) !important; }
+.tabseg button{ color:var(--ink2) !important; }
+.tabseg button.on{ background:var(--ink) !important; color:#F7F2E7 !important; box-shadow:none !important; }
+
+/* page kickers -> gold (day + night) */
+.masthead .kicker,body.night .masthead .kicker,.kicker{ color:var(--gold) !important; }
+
+/* birthday banner -> ivory + charcoal text */
+.bdaybanner{ background:linear-gradient(180deg,#FCF9F1,#F2E8D5) !important; color:var(--ink) !important; border-color:var(--gold) !important; }
+
+/* health / discovery note -> gold accent */
+.health,body.night .health{ color:var(--ink2) !important; background:rgba(183,144,90,.12) !important; border-left:3px solid var(--gold) !important; }
+
+/* Modern Home Digest tiles + chips -> ivory / gold */
+.nest .ntile{ background:#FCF9F1 !important; border:1px solid var(--line) !important; }
+.nest .ntile h3,.nest .ntile p{ color:var(--ink) !important; }
+.nest .ntile p{ color:var(--ink2) !important; }
+.nest .nchip{ background:#FCF9F1 !important; border:1px solid var(--line) !important; color:var(--ink) !important; }
+.nest .nchip:hover{ background:var(--paper2) !important; }
+
+/* neutralize leftover night-mode purple text */
+body.night .masthead h1,body.night .section-h h2{ color:var(--ink) !important; }
+body.night .affirm,body.night .section-h small.note{ color:var(--ink2) !important; }
