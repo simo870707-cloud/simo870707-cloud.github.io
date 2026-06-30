@@ -297,14 +297,6 @@ function sunTimes(lat,lng,date){const rad=Math.PI/180,deg=180/Math.PI;
   const r=calc(true),s=calc(false);if(r==null||s==null)return null;
   const mk=ut=>{const dt=new Date(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()));dt.setUTCHours(Math.floor(ut),Math.round((ut%1)*60),0,0);return dt;};
   return {rise:mk(r),set:mk(s)};}
-function requestSun(){const el=$("#sunTimes");if(!el)return;
-  if(!navigator.geolocation){el.textContent="Location isn't available on this device.";return;}
-  el.textContent="Finding your sky…";
-  navigator.geolocation.getCurrentPosition(p=>{const t=sunTimes(p.coords.latitude,p.coords.longitude,new Date());
-    if(!t){el.textContent="The Sun barely sets here today.";return;}
-    const f=x=>x.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    el.innerHTML=`🌅 Sunrise ${f(t.rise)} &nbsp;·&nbsp; 🌇 Sunset ${f(t.set)}`;
-  },()=>{el.textContent="Couldn't read your location.";},{timeout:8000});}
 function moonPhase(d){const lp=2551442.8,now=Date.UTC(d.getFullYear(),d.getMonth(),d.getDate(),12)/1000,nm=Date.UTC(2000,0,6,18,14)/1000;
   let p=((now-nm)%lp)/lp;if(p<0)p+=1;const i=Math.floor(p*8+0.5)%8;
   return {name:["New Moon","Waxing Crescent","First Quarter","Waxing Gibbous","Full Moon","Waning Gibbous","Last Quarter","Waning Crescent"][i],emoji:["🌑","🌒","🌓","🌔","🌕","🌖","🌗","🌘"][i]};}
@@ -478,8 +470,6 @@ function surprise(){const i=Math.floor(Math.random()*FACTS.length);ding();const 
   if(b)b.innerHTML=factCardHTML(i,true)+`<div class="center" style="margin-top:8px"><button class="btn ghost sm" onclick="surprise()">🎲 Another</button></div>`;}
 function tickClock(){const el=$("#clock");if(!el)return;el.textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
 setInterval(tickClock,1000);
-function renderHome2(){$("#view").innerHTML=renderHome();drawReminders();}
-function saveName(){S.name=$('#nameIn').value.trim();const b=$('#bdayIn');if(b)S.bday=b.value||"";save();ding();toast('Saved');renderHome2();}
 let bdayDinged=false,bdayFXon=false;
 function celebrateBdayMaybe(){if(bdayDinged||!S.bday)return;const t=new Date();if((+S.bday.split("-")[1]-1)===t.getMonth()&&(+S.bday.split("-")[2])===t.getDate()){bdayDinged=true;setTimeout(birthdayFX,500);}}
 function birthdayFX(){
@@ -1260,15 +1250,6 @@ function readGateCard(){ return '<div class="card center" style="padding:24px"><
   '<div class="muted ital" style="margin-bottom:14px;max-width:300px;display:inline-block">Unlock The Living Edit+ for unlimited facts — or come back tomorrow for 3 more.</div><br>'+
   '<button class="btn" onclick="subscribe()">✦ Unlock The Living Edit+</button></div>'; }
 function savedFacts(){ if(!Array.isArray(S.savedFacts)) S.savedFacts=[]; return S.savedFacts; }
-function factSaveId(k){ return "f"+k; }
-function isFactSaved(k){ var id=factSaveId(k); return savedFacts().some(function(x){return x.id===id;}); }
-function toggleFactSave(k,kind){ var arr=savedFacts(), id=factSaveId(k), i=-1, j;
-  for(j=0;j<arr.length;j++){ if(arr[j].id===id){ i=j; break; } }
-  if(i>=0){ arr.splice(i,1); ding("del"); toast("Removed from Saved"); }
-  else { var f=FACTS[k]; arr.push({id:id,k:k,kind:kind,theme:(CATS[f.cat]&&CATS[f.cat].n)||f.cat||"Other",text:f.a,ts:Date.now()}); ding(); toast("Saved"); }
-  save();
-  var b=document.querySelector('[data-save="'+id+'"]'); if(b){ var on=isFactSaved(k); b.textContent=on?"♥ Saved":"♡ Save"; b.classList.toggle("on",on); }
-}
 function factCardSaveable(k,kind){ var f=FACTS[k], id="f"+k, theme=(CATS[f.cat]&&CATS[f.cat].n)||f.cat||"Other", saved=savedHas(id);
   return factCardHTML(k,false).replace('<div class="acts">',
     '<div class="acts"><button class="btn ghost sm curio-savebtn'+(saved?" on":"")+'" data-said="'+id+'" data-kind="'+kind+'" data-theme="'+esc(theme)+'" data-txt="'+esc(f.a)+'" onclick="saveFromBtn(this)">'+(saved?"♥ Saved":"♡ Save")+'</button>'); }
@@ -1371,7 +1352,6 @@ function renderSaved(){
     listHTML("mind","Mind &amp; Soul")+
   '</div>';
 }
-function unsaveFact(k,kind){ toggleFactSave(k,kind); if(tab===5){ var v=document.getElementById("view"); if(v) v.innerHTML=renderSaved(); } }
 
 /* bottom-nav active state */
 function setBotnav(n){ var bn=document.getElementById("botnav"); if(!bn) return; bn.classList.add("show");
