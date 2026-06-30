@@ -586,7 +586,7 @@ function renderAlmanac(){
     
   </div>`;
 }
-function subscribe(){S.unlocked=true;S.paid=true;save();ding();toast("Welcome to The Living Edit+ ✦");setTab(tab);}
+function subscribe(){ openPlanChooser(); }
 function plusCardHTML(){
   if(S.unlocked)return `<div class="plus"><h2 class="serif">✦ You're a The Living Edit+ member</h2><div class="px">Thank you — every chapter, your organizer, the night sky, mysteries and surprises are unlocked.</div></div>`;
   return `<div class="plus">
@@ -1469,3 +1469,57 @@ function applyTimeTheme(){ try{ var h=new Date().getHours(), g;
 function breathFx(){ var el=document.getElementById("breathFx"); if(!el) return; el.classList.remove("go"); void el.offsetWidth; el.classList.add("go"); setTimeout(function(){ if(el)el.classList.remove("go"); },700); }
 
 try{ applyTimeTheme(); setInterval(applyTimeTheme, 300000); }catch(e){}
+
+
+/* ===== Billing: Google Play (Digital Goods API) with browser fallback ===== */
+var PLAY_BILLING="https://play.google.com/billing";
+var PLANS={
+  yearly:{ id:"living_edit_plus_yearly", label:"Yearly" },
+  monthly:{ id:"living_edit_plus_monthly", label:"Monthly" }
+};
+function billingService(){
+  return new Promise(function(resolve){
+    try{ if(window.getDigitalGoodsService){ window.getDigitalGoodsService(PLAY_BILLING).then(resolve).catch(function(){resolve(null);}); return; } }catch(e){}
+    resolve(null);
+  });
+}
+function openPlanChooser(){
+  var html='<h2 class="serif" style="font-size:25px;margin:0 0 6px">The Living Edit+</h2>'+
+    '<div class="muted ital" style="margin-bottom:16px">Unlimited facts, every topic, your Saved page, and the calm extras.</div>'+
+    '<div class="inrow" style="flex-direction:column;gap:10px;align-items:stretch">'+
+      '<button class="btn" onclick="buyPlan(\'yearly\')">Yearly &mdash; best value</button>'+
+      '<button class="btn ghost" onclick="buyPlan(\'monthly\')">Monthly</button>'+
+    '</div>'+
+    '<div class="muted ital" style="font-size:13px;margin-top:14px">Start with a 7-day free trial, then it renews automatically. Cancel anytime in Google Play.</div>';
+  if(typeof openAppSheet==="function") openAppSheet(html); else { grantPremium(); }
+}
+function buyPlan(which){
+  var plan=PLANS[which]; if(!plan) return;
+  billingService().then(function(svc){
+    if(!svc || typeof PaymentRequest==="undefined"){ if(typeof closeAppSheet==="function") closeAppSheet(); grantPremium(); return; } /* browser/dev fallback */
+    try{
+      var pr=new PaymentRequest(
+        [{ supportedMethods:PLAY_BILLING, data:{ sku:plan.id } }],
+        { total:{ label:"The Living Edit+", amount:{ currency:"USD", value:"0" } } });
+      pr.show().then(function(resp){
+        var token=resp.details && (resp.details.purchaseToken||resp.details.token);
+        resp.complete("success").then(function(){
+          try{ if(svc.acknowledge && token) svc.acknowledge(token); }catch(e){}
+          if(typeof closeAppSheet==="function") closeAppSheet(); grantPremium();
+        });
+      }).catch(function(){ /* user cancelled */ });
+    }catch(e){ /* ignore */ }
+  });
+}
+function grantPremium(){ S.unlocked=true; S.paid=true; save(); try{ding("pop");}catch(e){} toast("Welcome to The Living Edit+ ✦"); setTab(typeof tab!=="undefined"?tab:0); }
+/* On launch, ask Google whether this user already has an active subscription */
+function checkBillingEntitlement(){
+  billingService().then(function(svc){
+    if(!svc || !svc.listPurchases) return;
+    svc.listPurchases().then(function(purchases){
+      var active=purchases && purchases.some(function(p){ return p.itemId===PLANS.monthly.id || p.itemId===PLANS.yearly.id; });
+      if(active && !S.unlocked){ S.unlocked=true; save(); if(typeof tab!=="undefined") setTab(tab); }
+    }).catch(function(){});
+  });
+}
+try{ checkBillingEntitlement(); }catch(e){}
