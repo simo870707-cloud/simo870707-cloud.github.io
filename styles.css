@@ -588,3 +588,14 @@ body.night .affirm,body.night .section-h small.note{ color:var(--ink2) !importan
 /* refined monoline topic icons (replace emoji) */
 .chip-ic{ width:27px; height:27px; display:block; margin:0 auto 2px; fill:none; stroke:var(--gold);
   stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+
+/* A Quiet Minute — breathing circle */
+.quiet{ text-align:center; }
+.breath-circle{ width:128px; height:128px; border-radius:50%; margin:16px auto 6px;
+  display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(circle at 50% 38%, rgba(183,144,90,.20), rgba(183,144,90,.05));
+  border:1.5px solid var(--gold); color:var(--ink);
+  font-family:'Cormorant Garamond',serif; font-size:19px; letter-spacing:.3px; transform:scale(.72); }
+.breath-circle.breathing{ animation:breathe 10s ease-in-out infinite; }
+@keyframes breathe{ 0%{transform:scale(.72)} 40%{transform:scale(1.08)} 60%{transform:scale(1.08)} 100%{transform:scale(.72)} }
+@media(prefers-reduced-motion:reduce){ .breath-circle.breathing{ animation:none } }

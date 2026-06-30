@@ -569,15 +569,12 @@ function renderAlmanac(){
       <div id="rh" style="margin-top:10px"></div>
     </div>
 
-    <div class="section-h"><h2>🌌 Moon & Sky</h2></div>
-    <div class="skycard">${stars}
-      <div class="moon">${mp.emoji}</div>
-      <div class="serif center" style="font-size:21px">${esc(mp.name)}</div>
-      <div class="center sub">${season(d)} sky · day ${n} of the year</div>
-      <div class="center" style="margin-top:10px;position:relative;z-index:1">
-        <div id="sunTimes" class="sub" style="font-size:13px"></div>
-        <button class="btn ghost sm" style="margin-top:8px;border-color:rgba(255,255,255,.45);color:#e8eef3" onclick="requestSun()">🌅 Show sunrise &amp; sunset</button>
-      </div></div>
+    <div class="section-h"><h2>A Quiet Minute</h2></div>
+    <div class="card quiet"><span class="frame"></span>
+      <div class="muted ital" style="text-align:center;margin:2px 10px 2px">${esc(AFFIRMATIONS[n%AFFIRMATIONS.length])}</div>
+      <div class="breath-circle" id="breathCircle"><span id="breathText">Breathe</span></div>
+      <div class="center"><button class="btn ghost sm" id="breathBtn" onclick="toggleBreath()">Begin a minute</button></div>
+    </div>
 
     <div class="section-h"><h2>🧩 Mystery of the Day</h2></div>
     <div class="card"><span class="frame"></span><div class="serif" style="font-size:21px;line-height:1.36">${esc(mystery)}</div></div>
@@ -1428,3 +1425,24 @@ function homeTipCardSaveable(tip){ if(!tip) return ""; var text=tip.title+" — 
 
 /* Start the app AFTER all modules (nest/howto/home-tip) are defined */
 if(typeof S!=="undefined" && S && S.onboarded){ setTab(0); } else { showOnboarding(); }
+
+
+/* ===== A Quiet Minute — guided breathing ===== */
+var breathOn=false, breathStart=0;
+function setBreathText(t){ var e=document.getElementById("breathText"); if(e)e.textContent=t; }
+function toggleBreath(){
+  var c=document.getElementById("breathCircle"), b=document.getElementById("breathBtn");
+  if(breathOn){ breathOn=false; if(c)c.classList.remove("breathing"); if(b)b.textContent="Begin a minute"; setBreathText("Breathe"); return; }
+  breathOn=true; breathStart=Date.now(); try{ding();}catch(e){}
+  if(c)c.classList.add("breathing"); if(b)b.textContent="Stop";
+  breathTick();
+}
+function breathTick(){
+  if(!breathOn) return;
+  var el=Date.now()-breathStart;
+  if(el>=60000){ breathOn=false; var c=document.getElementById("breathCircle"), b=document.getElementById("breathBtn");
+    if(c)c.classList.remove("breathing"); if(b)b.textContent="Begin a minute"; setBreathText("Well done \u2726"); try{ding("pop");}catch(e){} return; }
+  var p=el%10000;
+  setBreathText(p<4000?"Breathe in":(p<6000?"Hold":"Breathe out"));
+  setTimeout(breathTick,250);
+}
