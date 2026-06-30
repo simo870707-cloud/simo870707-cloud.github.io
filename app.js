@@ -147,30 +147,12 @@ const FACTS=[
  {cat:"sayings",a:"'Bite the bullet' may recall soldiers biting lead during surgery, before anaesthetic existed.",d:"Courage with nothing to dull the pain."},
 ];
 const CHAPTERS=[
- {nm:"Space & Astronomy",cats:["space"]},
- {nm:"History",cats:["history"]},
- {nm:"Science",cats:["science","numbers","body"]},
- {nm:"Nature",cats:["nature"]},
- {nm:"Animals",cats:["animals"]},
- {nm:"Curiosities",cats:["weird"]},
- {nm:"Tech & Inventions",cats:["tech"]},
- {nm:"Programming",cats:["programming"]},
- {nm:"Sports",cats:["sports"]},
- {nm:"Gaming",cats:["gaming"]},
- {nm:"Automobiles",cats:["auto"]},
- {nm:"Nutrition & Food",cats:["nutrition"]},
- {nm:"Law & Society",cats:["law"]},
- {nm:"World & Places",cats:["geography"]},
- {nm:"Travel",cats:["travel"]},
- {nm:"Festivals & Rituals",cats:["festivals"]},
- {nm:"Agriculture",cats:["agriculture"]},
- {nm:"People",cats:["people"]},
- {nm:"Arts & Culture",cats:["culture"]},
- {nm:"Industry",cats:["industry"]},
- {nm:"Records & Statistics",cats:["records"]},
- {nm:"Wisdom",cats:["wisdom"]},
- {nm:"Symbols",cats:["symbols"]},
- {nm:"Sayings",cats:["sayings"]},
+ {nm:"Science & Tech",cats:["science","numbers","body","tech","programming","gaming","auto","industry"],svg:'<circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(120 12 12)"/>'},
+ {nm:"People & Wisdom",cats:["people","wisdom","sayings","symbols","festivals","culture"],svg:'<path d="M12 6.5C10 5 6.5 5 4.5 6.2v11.3C6.5 16.3 10 16.3 12 17.8M12 6.5c2-1.5 5.5-1.5 7.5-.3v11.3c-2-1.2-5.5-1.2-7.5.3M12 6.5v11.3"/>'},
+ {nm:"World, Nature & Space",cats:["geography","travel","nature","animals","agriculture","space"],svg:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3.2 2.7 3.2 15.3 0 18M12 3c-3.2 2.7-3.2 15.3 0 18"/>'},
+ {nm:"History & Society",cats:["history","law"],svg:'<path d="M4 9.5l8-5 8 5M5.5 9.5V19M10 9.5V19M14 9.5V19M18.5 9.5V19M4 19h16"/>'},
+ {nm:"Sports & Records",cats:["sports","records"],svg:'<path d="M8 4.5h8v3.5a4 4 0 0 1-8 0zM8 5.5H5.5v1A3 3 0 0 0 8.5 9.4M16 5.5h2.5v1A3 3 0 0 1 15.5 9.4M10.5 12.2V15M13.5 12.2V15M8.5 18.5h7l-1-3h-5z"/>'},
+ {nm:"Curiosities & Food",cats:["weird","nutrition"],svg:'<circle cx="10.5" cy="10.5" r="6"/><path d="M20 20l-5.2-5.2"/>'},
 ];
 const AFFIRMATIONS=[
  "Today, notice one thing you usually walk past.","Curiosity is a gentle kind of courage.",
@@ -365,7 +347,7 @@ function factCardHTML(i,opened){
   const f=FACTS[i], c=CATS[f.cat]||{e:"❖",c:"var(--green)",n:""};
   const vid="";
   return `<div class="card fact"><span class="frame"></span>
-    <div class="cat" style="color:${c.c}">${c.e} ${esc(c.n)}</div>
+    <div class="cat" style="color:${c.c}">${esc(c.n)}</div>
     <div class="body">${esc(f.a)}</div>
     <div class="deeper">${esc(f.d||"")}</div>
     ${vid}
@@ -571,7 +553,7 @@ setInterval(checkReminders,20000);
 /* ============ TAB 1 — ALMANACH ============ */
 function renderAlmanac(){
   const chapters=CHAPTERS.map((c,i)=>`<div class="chip" style="animation-delay:${i*.03}s" onclick="openChapter(${i})">
-      <span class="ic">${(CATS[c.cats[0]]||{}).e||"❖"}</span><span class="nm">${esc(c.nm)}</span></div>`).join("");
+      <span class="ic"><svg viewBox="0 0 24 24" class="chip-ic" aria-hidden="true">${c.svg}</svg></span><span class="nm">${esc(c.nm)}</span></div>`).join("");
   const d=new Date(), n=doy(d), mp=moonPhase(d);
   const stars=Array.from({length:16},()=>`<span class="star" style="top:${(Math.random()*72).toFixed(1)}%;left:${(Math.random()*100).toFixed(1)}%"></span>`).join("");
   const mystery=MYSTERIES[n%MYSTERIES.length];
