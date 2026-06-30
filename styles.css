@@ -552,3 +552,24 @@ body.night .affirm,body.night .section-h small.note{ color:var(--ink2) !importan
 .menu-loc{ padding:0 24px 6px; }
 .menu-loc-k{ display:block; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:2px; }
 .menu-loc #menuLoc{ font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink); }
+
+/* current-location label in capitals */
+.menu-loc #menuLoc{ text-transform:uppercase; letter-spacing:.6px; }
+
+/* bottom navigation bar */
+.botnav{ position:fixed; left:0; right:0; bottom:0; z-index:17; max-width:560px; margin:0 auto;
+  display:none; justify-content:space-around; align-items:stretch;
+  background:#F4EFE4; border-top:1px solid var(--line); box-shadow:0 -2px 14px rgba(70,52,22,.07);
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom)); }
+.botnav.show{ display:flex; }
+.botnav-item{ flex:1; min-width:0; background:none; border:none; cursor:pointer;
+  font-family:'EB Garamond',serif; font-size:11px; line-height:1.15; letter-spacing:.2px;
+  color:var(--ink2); padding:8px 3px; border-radius:10px; text-align:center;
+  transition:color .2s, background .2s; }
+.botnav-item.on{ color:var(--gold); font-weight:600; }
+.botnav-item:active{ background:rgba(183,144,90,.10); }
+/* clearance so the bar never covers content */
+.app{ padding-bottom:86px !important; }
+
+/* premium tabs dimmed for free users */
+.botnav-item.locked{ opacity:.45; }

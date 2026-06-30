@@ -774,8 +774,8 @@ function closeA11y(){$('#a11ySheet').classList.remove('show');}
 function setA11yText(v){if(!S.a11y)S.a11y={text:'normal',contrast:false};S.a11y.text=v;save();applyA11y();$('#a11yBody').innerHTML=a11yBody();ding();}
 function toggleA11yContrast(){if(!S.a11y)S.a11y={text:'normal',contrast:false};S.a11y.contrast=!S.a11y.contrast;save();applyA11y();$('#a11yBody').innerHTML=a11yBody();ding();}
 function closeMenu(){$("#menu").classList.remove("open");$("#menuScrim").classList.remove("show");$("#hamb").classList.remove("x");}
-function goTab(n){closeMenu();setTab(n);}
-function setTab(n){ try{setLoc(tabName(n));}catch(e){}
+function goTab(n){closeMenu(); if(typeof S!=="undefined" && !S.unlocked && (n===1||n===3||n===5)){ openBilling(); return; } setTab(n);}
+function setTab(n){ try{setLoc(tabName(n));}catch(e){} try{setBotnav(n);}catch(e){}
   if(n!==2)stopMic();
   tab=n;almStack=[];
   ["mi0","mi1","mi2"].forEach((id,i)=>{const el=$("#"+id);if(el)el.classList.toggle("on",i===n);});
@@ -1297,7 +1297,7 @@ function factCardSaveable(k,kind){ var saved=isFactSaved(k);
 /* ===== First-run onboarding ===== */
 var OB_TOPICS=["Home & Decor","Cleaning & Care","Cooking","Plants & Garden","Organising","Space & Astronomy","History","Nature & Animals","Science","Art & Culture","Travel & Places","Wellbeing"];
 var obStep=0, obPick={};
-function showOnboarding(){ obStep=0; obPick={}; renderOb(); }
+function showOnboarding(){ obStep=0; obPick={}; var _bn=document.getElementById("botnav"); if(_bn) _bn.classList.remove("show"); renderOb(); }
 function renderOb(){ var v=document.getElementById("view"); if(!v) return;
   if(obStep===0){
     v.innerHTML='<div class="panel ob">'+
@@ -1393,3 +1393,8 @@ function renderSaved(){
   '</div>';
 }
 function unsaveFact(k,kind){ toggleFactSave(k,kind); if(tab===5){ var v=document.getElementById("view"); if(v) v.innerHTML=renderSaved(); } }
+
+/* bottom-nav active state */
+function setBotnav(n){ var bn=document.getElementById("botnav"); if(!bn) return; bn.classList.add("show");
+  var locked=(typeof S!=="undefined") && !S.unlocked;
+  var it=bn.querySelectorAll(".botnav-item"); for(var i=0;i<it.length;i++){ var t=+it[i].dataset.t; it[i].classList.toggle("on", t===n); it[i].classList.toggle("locked", locked && (t===1||t===3||t===5)); } }
