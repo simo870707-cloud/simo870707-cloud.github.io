@@ -1,3 +1,12 @@
+/* Single shared #view watcher (replaces several MutationObservers) */
+window.__viewHooks=[];
+function onViewChange(fn){ if(typeof fn==="function") window.__viewHooks.push(fn); }
+(function(){ var t;
+  function runHooks(){ for(var i=0;i<window.__viewHooks.length;i++){ try{ window.__viewHooks[i](); }catch(e){} } }
+  function ping(){ clearTimeout(t); t=setTimeout(runHooks,70); }
+  function start(){ var v=document.getElementById("view")||document.body; try{ new MutationObserver(ping).observe(v,{childList:true,subtree:true}); }catch(e){} }
+  if(document.readyState==="loading") window.addEventListener("DOMContentLoaded",start); else start();
+})();
 /* ============ DATA ============ */
 const CATS={
  space:{e:"🪐",c:"#5B6B8C",n:"Space & Astronomy"}, nature:{e:"🍃",c:"#6E8C5A",n:"Nature & Animals"},
@@ -1037,7 +1046,7 @@ if('serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js').c
   }
   var t; function ping(){ clearTimeout(t); t=setTimeout(hydrate,60); }
   function start(){
-    try{ new MutationObserver(ping).observe(document.getElementById("view")||document.body,{childList:true,subtree:true}); }catch(e){}
+    onViewChange(ping);
     hydrate();
   }
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",start); else start();
@@ -1150,7 +1159,7 @@ function curioShareItem(id){
 }
 (function(){
   var t; function ping(){ clearTimeout(t); t=setTimeout(function(){ curioInjectSaves(); curioCount(); },80); }
-  function start(){ try{ new MutationObserver(ping).observe(document.getElementById('view')||document.body,{childList:true,subtree:true}); }catch(e){} ping(); }
+  function start(){ onViewChange(ping); ping(); }
   if(document.readyState==='loading') window.addEventListener('DOMContentLoaded',start); else start();
 })();
 
@@ -1200,7 +1209,7 @@ function curioInjectTrial(){
 curioTrialSync();   /* runs before any navigation to a locked tab */
 (function(){
   var t; function ping(){ clearTimeout(t); t=setTimeout(curioInjectTrial,90); }
-  function start(){ try{ new MutationObserver(ping).observe(document.getElementById('view')||document.body,{childList:true,subtree:true}); }catch(e){} ping(); }
+  function start(){ onViewChange(ping); ping(); }
   if(document.readyState==='loading') window.addEventListener('DOMContentLoaded',start); else start();
 })();
 
@@ -1225,7 +1234,7 @@ curioTrialSync();   /* runs before any navigation to a locked tab */
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',enhance); else enhance();
   // Re-run as views re-render into #view.
   var v=document.getElementById('view');
-  if(v && 'MutationObserver' in window){ new MutationObserver(enhance).observe(v,{childList:true,subtree:true}); }
+  if(v){ onViewChange(enhance); }
 })();
 
 
@@ -1389,7 +1398,7 @@ function injectHomeSaves(){ var tiles=document.querySelectorAll('#view .nest .nt
   });
 }
 (function(){ var t; function ping(){ clearTimeout(t); t=setTimeout(injectHomeSaves,110); }
-  function start(){ try{ new MutationObserver(ping).observe(document.getElementById('view')||document.body,{childList:true,subtree:true}); }catch(e){} ping(); }
+  function start(){ onViewChange(ping); ping(); }
   if(document.readyState==='loading') window.addEventListener('DOMContentLoaded',start); else start();
 })();
 
