@@ -481,7 +481,7 @@ function renderHome(){
     </div>
 
     <div class="section-h"><h2>Little facts big fun</h2></div>
-    ${factCardHTML(fotd,false)}
+    ${factCardSaveable(fotd,"mind")}
 
     <div class="section-h"><h2>Daily Drop</h2></div>
     <div class="card" id="dropCard" role="button" tabindex="0" onclick="openDrop()" style="cursor:pointer"><span class="frame"></span><div id="dropHint" class="muted ital">Tap to open today’s drop</div><div id="dropBody" class="quotecard" style="display:none">${esc(quote.a)}</div></div>
@@ -786,6 +786,7 @@ function setTab(n){ try{setLoc(tabName(n));}catch(e){}
   else if(n===1){v.innerHTML=renderAlmanac();drawRH();}
   else if(n===3){v.innerHTML=renderNest();}
   else if(n===4){v.innerHTML=renderHowTo();}
+  else if(n===5){v.innerHTML=renderSaved();}
   else {v.innerHTML=renderOrganizer();if(S.unlocked){drawNotes();drawVoiceNotes();}}
   window.scrollTo({top:0,behavior:"smooth"});
 }
@@ -1326,7 +1327,7 @@ function obFinish(){ S.interests=Object.keys(obPick); S.onboarded=true; save(); 
 /* ===== Burger menu: location label + Settings / Billing / Terms ===== */
 var curLoc="Today";
 function setLoc(name){ curLoc=name||"Home"; var el=document.getElementById("menuLoc"); if(el) el.textContent=curLoc; }
-function tabName(n){ return n===1?"Mind & Soul":n===2?"Organizer":n===3?"Modern House Digest":n===4?"How-To":"Today"; }
+function tabName(n){ return n===1?"Mind & Soul":n===2?"Organizer":n===3?"Modern House Digest":n===4?"How-To":n===5?"Saved and Organised":"Today"; }
 function openAppSheet(html){ closeMenu(); document.getElementById("appSheetBody").innerHTML=html+'<div class="center" style="margin-top:18px"><button class="btn ghost" onclick="closeAppSheet()">Done</button></div>'; document.getElementById("appSheet").classList.add("show"); }
 function closeAppSheet(){ document.getElementById("appSheet").classList.remove("show"); }
 
@@ -1363,3 +1364,32 @@ function openTerms(){ openAppSheet(
   '<p><b>Support.</b> Reach us via the app store listing.</p>'+
   '<p style="opacity:.7;margin-top:12px">Last updated '+(new Date().getFullYear())+'. This in-app summary is for reference and is not a substitute for full legal terms.</p>'+
   '</div>'); }
+
+/* ===== Page 4: Saved and Organised ===== */
+function renderSaved(){
+  var arr=savedFacts();
+  var groups={home:{}, mind:{}};
+  arr.forEach(function(x){ var kind=(x.kind==="home")?"home":"mind"; var th=x.theme||"Other"; (groups[kind][th]=groups[kind][th]||[]).push(x); });
+  function listHTML(kind,title){
+    var themes=groups[kind], keys=Object.keys(themes).sort();
+    var out='<div class="section-h"><h2>'+title+'</h2></div>';
+    if(!keys.length){ return out+'<div class="card center muted ital">Nothing saved here yet — tap ♡ on a fact to keep it.</div>'; }
+    keys.forEach(function(th){
+      out+='<div class="label" style="margin:16px 0 6px">'+esc(th)+'</div>';
+      themes[th].slice().reverse().forEach(function(x){
+        out+='<div class="card fact"><span class="frame"></span>'+
+          '<div class="body">'+esc(x.text)+'</div>'+
+          '<div class="acts"><button class="btn ghost sm" onclick="unsaveFact('+x.k+',\''+x.kind+'\')">♥ Remove</button>'+
+          '<button class="btn ghost sm" onclick="shareFact('+x.k+')">↗ Share</button></div></div>';
+      });
+    });
+    return out;
+  }
+  return '<div class="panel"><div class="back" onclick="setTab(0)">‹ Back to Today</div>'+
+    '<div class="masthead"><div class="kicker">Saved and Organised</div><h1 style="font-size:34px">Your Saved Facts</h1>'+
+    '<div class="muted ital">Kept facts, grouped by Home and Mind &amp; Soul — and by theme.</div></div>'+
+    listHTML("home","Home")+
+    listHTML("mind","Mind &amp; Soul")+
+  '</div>';
+}
+function unsaveFact(k,kind){ toggleFactSave(k,kind); if(tab===5){ var v=document.getElementById("view"); if(v) v.innerHTML=renderSaved(); } }
