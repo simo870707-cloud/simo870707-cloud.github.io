@@ -616,3 +616,17 @@ body.night .affirm,body.night .section-h small.note{ color:var(--ink2) !importan
   animation:bfx .7s cubic-bezier(.2,.7,.2,1) forwards; }
 @keyframes bfx{ 0%{transform:scale(.3) rotate(0deg); opacity:0} 28%{opacity:.85} 100%{transform:scale(3.4) rotate(45deg); opacity:0} }
 @media(prefers-reduced-motion:reduce){ .breath-fx.go::after{ animation:none } }
+
+/* ===== Spacious, decluttered layout (calm negative space) ===== */
+.app{ padding-left:24px; padding-right:24px; }
+.card{ padding:22px; margin-bottom:16px; }
+.section-h{ margin:34px 0 14px; }
+.masthead{ margin:14px 0 8px; }
+.ribbon{ margin:16px 0 10px; padding:9px 16px; }
+.grid{ gap:16px; }
+.choose{ gap:16px; margin-top:6px; }
+.acts{ margin-top:16px; gap:11px; }
+.fact .body{ line-height:1.46; }
+.btn{ padding:11px 22px; }
+.app-hero{ margin:12px 8px 8px; }
+.panel{ padding-bottom:6px; }
