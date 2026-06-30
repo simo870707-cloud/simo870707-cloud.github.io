@@ -458,8 +458,8 @@ function renderHome(){
 
     <div class="section-h"><h2>Discover The Living Edit. Where should we begin?</h2></div>
     <div class="choose">
-      <button class="choose-tile choose-home" onclick="goTab(3)"><span class="choose-label">Clear the Home</span><span class="choose-sub">Modern House Digest</span></button>
-      <button class="choose-tile choose-mind" onclick="goTab(1)"><span class="choose-label">Calm the Mind</span><span class="choose-sub">Mind & Soul</span></button>
+      <button class="choose-tile choose-home" onclick="goTab(3)"><span class="choose-label">Clear the Home</span></button>
+      <button class="choose-tile choose-mind" onclick="goTab(1)"><span class="choose-label">Calm the Mind</span></button>
     </div>
 
     ${dailyFreeFacts(n).slice(0,2).map(function(k){return factCardSaveable(k,"mind");}).join("")}
