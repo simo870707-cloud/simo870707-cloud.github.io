@@ -481,7 +481,8 @@ function renderHome(){
     </div>
 
     <div class="section-h"><h2>Little facts big fun</h2></div>
-    ${dailyFreeFacts(n).map(function(k){return factCardSaveable(k,"mind");}).join("")}
+    ${dailyFreeFacts(n).slice(0,2).map(function(k){return factCardSaveable(k,"mind");}).join("")}
+    ${(typeof window!=="undefined"&&typeof window.nestDailyTip==="function")?homeTipCardSaveable(window.nestDailyTip(n)):""}
 
     <div class="section-h"><h2>Daily Drop</h2></div>
     <div class="card" id="dropCard" role="button" tabindex="0" onclick="openDrop()" style="cursor:pointer"><span class="frame"></span><div id="dropHint" class="muted ital">Tap to open today’s drop</div><div id="dropBody" class="quotecard" style="display:none">${esc(quote.a)}</div></div>
@@ -921,6 +922,7 @@ if('serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js').c
   window.nestSaveToggle=function(el){var on=el.classList.toggle('on');el.textContent=on?'♥':'♡';};
   window.nestJump=function(i){var e=document.getElementById('nsec'+i);if(e)e.scrollIntoView({behavior:'smooth',block:'start'});};
   window.nestSurprise=function(){var t=document.querySelectorAll('.nest .ntile');if(!t.length)return;var p=t[Math.floor(Math.random()*t.length)];p.scrollIntoView({behavior:'smooth',block:'center'});p.style.animation='none';void p.offsetWidth;p.style.animation='nestPop .6s';try{if(window.ding)ding('pop');}catch(e){}};
+  window.nestDailyTip=function(nn){ var all=[]; NEST.forEach(function(sec){ (sec.topics||[]).forEach(function(t){ all.push({t:t,s:sec}); }); }); if(!all.length) return null; var p=all[nn%all.length]; return { title:L(p.t.t), body:L(p.t.b), theme:L(p.s.name) }; };
 })();
 
 /* How-To — additive page (tab 4). Self-localises EN/FR/IT/DE/RO. Includes a search
@@ -1433,3 +1435,12 @@ function injectHomeSaves(){ var tiles=document.querySelectorAll('#view .nest .nt
   function start(){ try{ new MutationObserver(ping).observe(document.getElementById('view')||document.body,{childList:true,subtree:true}); }catch(e){} ping(); }
   if(document.readyState==='loading') window.addEventListener('DOMContentLoaded',start); else start();
 })();
+
+
+/* Home tip card for Today (saves to the Home list) */
+function homeTipCardSaveable(tip){ if(!tip) return ""; var text=tip.title+" — "+tip.body, id="h"+curioHash(text), saved=savedHas(id);
+  return '<div class="card fact"><span class="frame"></span>'+
+    '<div class="cat" style="color:var(--gold)">'+esc(tip.theme)+'</div>'+
+    '<div class="body">'+esc(tip.title)+'</div>'+
+    '<div class="deeper">'+esc(tip.body)+'</div>'+
+    '<div class="acts"><button class="btn ghost sm curio-savebtn'+(saved?" on":"")+'" data-said="'+id+'" data-kind="home" data-theme="'+esc(tip.theme)+'" data-txt="'+esc(text)+'" onclick="saveFromBtn(this)">'+(saved?"♥ Saved":"♡ Save")+'</button><button class="btn ghost sm" onclick="shareText(this.parentNode.querySelector(\x27[data-txt]\x27).getAttribute(\x27data-txt\x27))">↗ Share</button></div></div>'; }
