@@ -474,14 +474,14 @@ function renderHome(){
 
     <div class="ribbon" style="margin-top:10px"><b>${esc(dateLong)}</b> · Day ${n} of ${d.getFullYear()} · Week ${isoWeek(d)} · ${season(d)} · ${mp.emoji} ${esc(mp.name)}</div>
 
-    <div class="section-h"><h2>What would you like to take care of today?</h2></div>
+    <div class="section-h"><h2>Where should we start?</h2></div>
     <div class="choose">
       <button class="choose-tile choose-home" onclick="goTab(3)"><span class="choose-label">Home</span><span class="choose-sub">Modern House Digest</span></button>
       <button class="choose-tile choose-mind" onclick="goTab(1)"><span class="choose-label">Mind</span><span class="choose-sub">Mind & Soul</span></button>
     </div>
 
     <div class="section-h"><h2>Little facts big fun</h2></div>
-    ${factCardSaveable(fotd,"mind")}
+    ${dailyFreeFacts(n).map(function(k){return factCardSaveable(k,"mind");}).join("")}
 
     <div class="section-h"><h2>Daily Drop</h2></div>
     <div class="card" id="dropCard" role="button" tabindex="0" onclick="openDrop()" style="cursor:pointer"><span class="frame"></span><div id="dropHint" class="muted ital">Tap to open today’s drop</div><div id="dropBody" class="quotecard" style="display:none">${esc(quote.a)}</div></div>
@@ -1290,9 +1290,9 @@ function toggleFactSave(k,kind){ var arr=savedFacts(), id=factSaveId(k), i=-1, j
   save();
   var b=document.querySelector('[data-save="'+id+'"]'); if(b){ var on=isFactSaved(k); b.textContent=on?"♥ Saved":"♡ Save"; b.classList.toggle("on",on); }
 }
-function factCardSaveable(k,kind){ var saved=isFactSaved(k);
+function factCardSaveable(k,kind){ var f=FACTS[k], id="f"+k, theme=(CATS[f.cat]&&CATS[f.cat].n)||f.cat||"Other", saved=savedHas(id);
   return factCardHTML(k,false).replace('<div class="acts">',
-    '<div class="acts"><button class="btn ghost sm curio-savebtn'+(saved?" on":"")+'" data-save="'+factSaveId(k)+'" onclick="toggleFactSave('+k+',\''+kind+'\')">'+(saved?"♥ Saved":"♡ Save")+'</button>'); }
+    '<div class="acts"><button class="btn ghost sm curio-savebtn'+(saved?" on":"")+'" data-said="'+id+'" data-kind="'+kind+'" data-theme="'+esc(theme)+'" data-txt="'+esc(f.a)+'" onclick="saveFromBtn(this)">'+(saved?"♥ Saved":"♡ Save")+'</button>'); }
 
 /* ===== First-run onboarding ===== */
 var OB_TOPICS=["Home & Decor","Cleaning & Care","Cooking","Plants & Garden","Organising","Space & Astronomy","History","Nature & Animals","Science","Art & Culture","Travel & Places","Wellbeing"];
@@ -1379,8 +1379,8 @@ function renderSaved(){
       themes[th].slice().reverse().forEach(function(x){
         out+='<div class="card fact"><span class="frame"></span>'+
           '<div class="body">'+esc(x.text)+'</div>'+
-          '<div class="acts"><button class="btn ghost sm" onclick="unsaveFact('+x.k+',\''+x.kind+'\')">♥ Remove</button>'+
-          '<button class="btn ghost sm" onclick="shareFact('+x.k+')">↗ Share</button></div></div>';
+          '<div class="acts"><button class="btn ghost sm" onclick="savedRemove(\''+x.id+'\')">♥ Remove</button>'+
+          '<button class="btn ghost sm" onclick="shareSaved(\''+x.id+'\')">↗ Share</button></div></div>';
       });
     });
     return out;
@@ -1398,3 +1398,38 @@ function unsaveFact(k,kind){ toggleFactSave(k,kind); if(tab===5){ var v=document
 function setBotnav(n){ var bn=document.getElementById("botnav"); if(!bn) return; bn.classList.add("show");
   var locked=(typeof S!=="undefined") && !S.unlocked;
   var it=bn.querySelectorAll(".botnav-item"); for(var i=0;i<it.length;i++){ var t=+it[i].dataset.t; it[i].classList.toggle("on", t===n); it[i].classList.toggle("locked", locked && (t===1||t===3||t===5)); } }
+
+/* 3 distinct daily facts for the free Today page (rotate by day-of-year) */
+function dailyFreeFacts(n){ var L=FACTS.length, a=n%L, b=(n+Math.floor(L/3))%L, c=(n+Math.floor(2*L/3))%L;
+  var arr=[a]; if(arr.indexOf(b)<0)arr.push(b); if(arr.indexOf(c)<0)arr.push(c); return arr; }
+
+
+/* ===== Generalized saving (FACTS + Home Digest items) ===== */
+function savedHas(id){ return savedFacts().some(function(x){return x.id===id;}); }
+function saveToggle(id,kind,theme,text){ var arr=savedFacts(), i=-1, j;
+  for(j=0;j<arr.length;j++){ if(arr[j].id===id){ i=j; break; } }
+  if(i>=0){ arr.splice(i,1); try{ding("del");}catch(e){} toast("Removed from Saved"); }
+  else { arr.push({id:id,kind:kind,theme:theme||"Other",text:text,ts:Date.now()}); try{ding();}catch(e){} toast("Saved"); }
+  save(); return savedHas(id); }
+function saveFromBtn(b){ var on=saveToggle(b.getAttribute("data-said"),b.getAttribute("data-kind"),b.getAttribute("data-theme"),b.getAttribute("data-txt")); b.textContent=on?"♥ Saved":"♡ Save"; b.classList.toggle("on",on); }
+function savedRemove(id){ var arr=savedFacts(),j; for(j=0;j<arr.length;j++){ if(arr[j].id===id){ arr.splice(j,1); break; } } save(); try{ding("del");}catch(e){} toast("Removed from Saved"); if(tab===5){ var v=document.getElementById("view"); if(v) v.innerHTML=renderSaved(); } }
+function shareSaved(id){ var it=savedFacts().filter(function(x){return x.id===id;})[0]; if(it) shareText(it.text); }
+
+/* Inject a Save button into each Home Digest tile (kind='home') */
+function injectHomeSaves(){ var tiles=document.querySelectorAll('#view .nest .ntile'); if(!tiles.length) return;
+  Array.prototype.forEach.call(tiles,function(t){ if(t.querySelector('.home-save')) return;
+    var h3=t.querySelector('h3'), p=t.querySelector('p');
+    var title=h3?(h3.textContent||'').trim():'', body=p?(p.textContent||'').trim():'';
+    var text=title?(title+' — '+body):body; if(!text) return;
+    var sec=t.closest('[id^="nsec"]'); var hd=sec?sec.querySelector('h2'):null;
+    var theme=(hd&&hd!==h3)?(hd.textContent||'').replace(/^[^A-Za-z]+/,'').trim():'Home Digest'; if(!theme) theme='Home Digest';
+    var id='h'+curioHash(text); var saved=savedHas(id);
+    var btn=document.createElement('button'); btn.type='button'; btn.className='btn ghost sm home-save'+(saved?' on':''); btn.textContent=saved?'♥ Saved':'♡ Save'; btn.style.marginTop='10px';
+    btn.onclick=function(e){ e.stopPropagation(); var on=saveToggle(id,'home',theme,text); btn.textContent=on?'♥ Saved':'♡ Save'; btn.classList.toggle('on',on); };
+    t.appendChild(btn);
+  });
+}
+(function(){ var t; function ping(){ clearTimeout(t); t=setTimeout(injectHomeSaves,110); }
+  function start(){ try{ new MutationObserver(ping).observe(document.getElementById('view')||document.body,{childList:true,subtree:true}); }catch(e){} ping(); }
+  if(document.readyState==='loading') window.addEventListener('DOMContentLoaded',start); else start();
+})();

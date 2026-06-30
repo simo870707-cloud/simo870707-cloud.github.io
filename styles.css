@@ -573,3 +573,6 @@ body.night .affirm,body.night .section-h small.note{ color:var(--ink2) !importan
 
 /* premium tabs dimmed for free users */
 .botnav-item.locked{ opacity:.45; }
+
+/* hide the old cosmetic nest heart (real Save button replaces it) */
+.nheart{ display:none !important; }
