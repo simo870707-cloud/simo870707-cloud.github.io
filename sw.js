@@ -12,7 +12,7 @@
  *
  * Bump CACHE_VERSION whenever the precached shell changes.
  */
-const CACHE_VERSION = "tle-v2";
+const CACHE_VERSION = "tle-v3";
 const CACHE = CACHE_VERSION;
 
 // Core app shell — cached on install so the app boots offline.

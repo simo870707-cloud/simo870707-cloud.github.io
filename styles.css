@@ -651,3 +651,12 @@ body.night .affirm,body.night .section-h small.note{ color:var(--ink2) !importan
 /* Mind topic chips a touch smaller */
 .chip .nm{ font-size:14px; }
 .chip-ic{ width:23px; height:23px; }
+
+/* ===== Top-pick chooser spacing + uniform card fonts ===== */
+/* Home/Mind tiles: a touch smaller, with clear space before the facts below */
+.choose-tile{ padding:11px 10px !important; }
+.choose-label{ font-size:17px; }
+.choose{ gap:12px; margin:8px 0 30px !important; }
+/* same body font in every card across the app */
+.fact .body{ font-size:16px !important; }
+.quotecard{ font-size:16px !important; line-height:1.45; }
