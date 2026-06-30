@@ -589,13 +589,22 @@ body.night .affirm,body.night .section-h small.note{ color:var(--ink2) !importan
 .chip-ic{ width:27px; height:27px; display:block; margin:0 auto 2px; fill:none; stroke:var(--gold);
   stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
 
-/* A Quiet Minute — breathing circle */
+/* A Quiet Minute — breathing circle with calming living visual + minute ring */
 .quiet{ text-align:center; }
-.breath-circle{ width:128px; height:128px; border-radius:50%; margin:16px auto 6px;
-  display:flex; align-items:center; justify-content:center;
-  background:radial-gradient(circle at 50% 38%, rgba(183,144,90,.20), rgba(183,144,90,.05));
-  border:1.5px solid var(--gold); color:var(--ink);
-  font-family:'Cormorant Garamond',serif; font-size:19px; letter-spacing:.3px; transform:scale(.72); }
-.breath-circle.breathing{ animation:breathe 10s ease-in-out infinite; }
-@keyframes breathe{ 0%{transform:scale(.72)} 40%{transform:scale(1.08)} 60%{transform:scale(1.08)} 100%{transform:scale(.72)} }
-@media(prefers-reduced-motion:reduce){ .breath-circle.breathing{ animation:none } }
+.breath-circle{ position:relative; width:144px; height:144px; margin:16px auto 6px; }
+.breath-ring{ position:absolute; inset:0; transform:rotate(-90deg); }
+.breath-ring circle{ fill:none; stroke-width:3; }
+.breath-ring .bg{ stroke:rgba(183,144,90,.22); }
+.breath-ring .fg{ stroke:var(--gold); stroke-linecap:round; stroke-dasharray:289; stroke-dashoffset:289; transition:stroke-dashoffset .3s linear; }
+.breath-photo{ position:absolute; inset:9px; border-radius:50%; overflow:hidden; transform:scale(.84); box-shadow:inset 0 0 18px rgba(70,52,22,.12); }
+.breath-circle.breathing .breath-photo{ animation:breathe 10s ease-in-out infinite; }
+.breath-photo::before{ content:""; position:absolute; inset:-30%;
+  background:radial-gradient(circle at 32% 30%, rgba(214,189,140,.85), transparent 55%),
+            radial-gradient(circle at 70% 68%, rgba(150,176,150,.7), transparent 58%),
+            radial-gradient(circle at 50% 50%, #FBF6EA, #ECDFC5);
+  animation:breathDrift 16s ease-in-out infinite alternate; }
+.breath-label{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family:'Cormorant Garamond',serif; font-size:19px; letter-spacing:.3px; color:var(--ink); z-index:2; }
+@keyframes breathe{ 0%{transform:scale(.84)} 40%{transform:scale(1.06)} 60%{transform:scale(1.06)} 100%{transform:scale(.84)} }
+@keyframes breathDrift{ 0%{transform:scale(1) rotate(0deg)} 100%{transform:scale(1.18) rotate(12deg)} }
+@media(prefers-reduced-motion:reduce){ .breath-circle.breathing .breath-photo{animation:none} .breath-photo::before{animation:none} }

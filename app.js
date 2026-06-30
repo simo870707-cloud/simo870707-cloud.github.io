@@ -456,7 +456,7 @@ function renderHome(){
 
     <div class="ribbon" style="margin-top:10px"><b>${esc(dateLong)}</b> · Day ${n} of ${d.getFullYear()} · Week ${isoWeek(d)} · ${season(d)} · ${mp.emoji} ${esc(mp.name)}</div>
 
-    <div class="section-h"><h2>Welcome to The Living Edit! What’s your choice?</h2></div>
+    <div class="section-h"><h2>Discover The Living Edit. Where should we begin?</h2></div>
     <div class="choose">
       <button class="choose-tile choose-home" onclick="goTab(3)"><span class="choose-label">Home</span><span class="choose-sub">Modern House Digest</span></button>
       <button class="choose-tile choose-mind" onclick="goTab(1)"><span class="choose-label">Mind</span><span class="choose-sub">Mind & Soul</span></button>
@@ -572,7 +572,7 @@ function renderAlmanac(){
     <div class="section-h"><h2>A Quiet Minute</h2></div>
     <div class="card quiet"><span class="frame"></span>
       <div class="muted ital" style="text-align:center;margin:2px 10px 2px">${esc(AFFIRMATIONS[n%AFFIRMATIONS.length])}</div>
-      <div class="breath-circle" id="breathCircle"><span id="breathText">Breathe</span></div>
+      <div class="breath-circle" id="breathCircle"><svg class="breath-ring" viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="46"></circle><circle class="fg" id="breathRing" cx="50" cy="50" r="46"></circle></svg><div class="breath-photo"></div><span class="breath-label" id="breathText">Breathe</span></div>
       <div class="center"><button class="btn ghost sm" id="breathBtn" onclick="toggleBreath()">Begin a minute</button></div>
     </div>
 
@@ -1432,8 +1432,8 @@ var breathOn=false, breathStart=0;
 function setBreathText(t){ var e=document.getElementById("breathText"); if(e)e.textContent=t; }
 function toggleBreath(){
   var c=document.getElementById("breathCircle"), b=document.getElementById("breathBtn");
-  if(breathOn){ breathOn=false; if(c)c.classList.remove("breathing"); if(b)b.textContent="Begin a minute"; setBreathText("Breathe"); return; }
-  breathOn=true; breathStart=Date.now(); try{ding();}catch(e){}
+  if(breathOn){ breathOn=false; if(c)c.classList.remove("breathing"); if(b)b.textContent="Begin a minute"; setBreathText("Breathe"); breathRing(289); return; }
+  breathOn=true; breathStart=Date.now(); breathRing(289); try{ding();}catch(e){}
   if(c)c.classList.add("breathing"); if(b)b.textContent="Stop";
   breathTick();
 }
@@ -1441,8 +1441,10 @@ function breathTick(){
   if(!breathOn) return;
   var el=Date.now()-breathStart;
   if(el>=60000){ breathOn=false; var c=document.getElementById("breathCircle"), b=document.getElementById("breathBtn");
-    if(c)c.classList.remove("breathing"); if(b)b.textContent="Begin a minute"; setBreathText("Well done \u2726"); try{ding("pop");}catch(e){} return; }
-  var p=el%10000;
+    if(c)c.classList.remove("breathing"); if(b)b.textContent="Begin a minute"; breathRing(0); setBreathText("Well done \u2726"); try{ding("pop");}catch(e){} return; }
+  breathRing(289*(1-el/60000)); var p=el%10000;
   setBreathText(p<4000?"Breathe in":(p<6000?"Hold":"Breathe out"));
   setTimeout(breathTick,250);
 }
+
+function breathRing(o){ var r=document.getElementById("breathRing"); if(r) r.style.strokeDashoffset=o; }
