@@ -470,12 +470,11 @@ function renderHome(){
   return `<div class="panel">
     ${isBday?`<div class="bdaybanner">🎂 Happy birthday${S.name?', '+esc(S.name):''}!<span>Wishing you a year full of discovery.</span><button class="btn sm" style="margin-top:8px" onclick="birthdayFX()">🎉 Celebrate again</button></div>`:""}
 
-    <div class="masthead" style="margin-top:4px"><img src="logo-mark.png?v=3" alt="The Living Edit" style="height:84px;width:auto;display:block;margin:0 auto 2px"><div class="muted" style="font-size:32px">${greet()}${nm}</div></div>
+    <div class="masthead" style="margin-top:4px"><img src="logo-mark.png?v=3" alt="The Living Edit" style="height:84px;width:auto;display:block;margin:0 auto 2px"><div class="app-hero">Things to learn, things to test, and things to love.</div></div>
 
     <div class="ribbon" style="margin-top:10px"><b>${esc(dateLong)}</b> · Day ${n} of ${d.getFullYear()} · Week ${isoWeek(d)} · ${season(d)} · ${mp.emoji} ${esc(mp.name)}</div>
 
-    <div class="app-tagline">Things to learn, things to test, and things to love.</div>
-    <div class="section-h"><h2>Where should we start?</h2></div>
+    <div class="section-h"><h2>Welcome to The Living Edit! What’s your choice?</h2></div>
     <div class="choose">
       <button class="choose-tile choose-home" onclick="goTab(3)"><span class="choose-label">Home</span><span class="choose-sub">Modern House Digest</span></button>
       <button class="choose-tile choose-mind" onclick="goTab(1)"><span class="choose-label">Mind</span><span class="choose-sub">Mind & Soul</span></button>
