@@ -538,3 +538,17 @@ body.night .ribbon,body.night .ribbon b,body.night #clock,body.night .clock{
 /* neutralize leftover night-mode purple text */
 body.night .masthead h1,body.night .section-h h2{ color:var(--ink) !important; }
 body.night .affirm,body.night .section-h small.note{ color:var(--ink2) !important; }
+
+/* ===== Onboarding ===== */
+.ob{ padding-top:14px }
+.ob-logo{ text-align:center; margin:8px 0 2px }
+.ob-chips{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:10px }
+.ob-chip{ font:inherit; font-size:15px; color:var(--ink); background:#FCF9F1; border:1px solid var(--line);
+  border-radius:30px; padding:10px 16px; cursor:pointer; transition:transform .15s, background .2s, border-color .2s }
+.ob-chip:hover{ transform:translateY(-2px) }
+.ob-chip.on{ background:var(--gold) !important; border-color:var(--gold) !important; color:#2C2A27 !important; font-weight:600 }
+
+/* burger menu: current-location header */
+.menu-loc{ padding:0 24px 6px; }
+.menu-loc-k{ display:block; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:2px; }
+.menu-loc #menuLoc{ font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink); }
