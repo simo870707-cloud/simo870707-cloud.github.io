@@ -791,7 +791,6 @@ function setTab(n){ try{setLoc(tabName(n));}catch(e){} try{setBotnav(n);}catch(e
   else {v.innerHTML=renderOrganizer();if(S.unlocked){drawNotes();drawVoiceNotes();}}
   window.scrollTo({top:0,behavior:"smooth"});
 }
-if(typeof S!=="undefined" && S && S.onboarded){ setTab(0); } else { showOnboarding(); }
 applyA11y();
 checkReminders();
 if('serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js').catch(()=>{});}catch(e){}}
@@ -1444,3 +1443,7 @@ function homeTipCardSaveable(tip){ if(!tip) return ""; var text=tip.title+" — 
     '<div class="body">'+esc(tip.title)+'</div>'+
     '<div class="deeper">'+esc(tip.body)+'</div>'+
     '<div class="acts"><button class="btn ghost sm curio-savebtn'+(saved?" on":"")+'" data-said="'+id+'" data-kind="home" data-theme="'+esc(tip.theme)+'" data-txt="'+esc(text)+'" onclick="saveFromBtn(this)">'+(saved?"♥ Saved":"♡ Save")+'</button><button class="btn ghost sm" onclick="shareText(this.parentNode.querySelector(\x27[data-txt]\x27).getAttribute(\x27data-txt\x27))">↗ Share</button></div></div>'; }
+
+
+/* Start the app AFTER all modules (nest/howto/home-tip) are defined */
+if(typeof S!=="undefined" && S && S.onboarded){ setTab(0); } else { showOnboarding(); }
