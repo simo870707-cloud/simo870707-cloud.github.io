@@ -660,3 +660,15 @@ body.night .affirm,body.night .section-h small.note{ color:var(--ink2) !importan
 /* same body font in every card across the app */
 .fact .body{ font-size:16px !important; }
 .quotecard{ font-size:16px !important; line-height:1.45; }
+
+/* ===== Uniform, upright text inside cards ===== */
+.fact .body, .fact .deeper, .quotecard{ font-size:16px !important; font-style:normal !important; }
+.card .ital, .card .muted.ital{ font-style:normal !important; }
+.fact .deeper{ margin-top:3px; }
+
+/* ===== Calmer, slower, more delicate open animation (~2.5-3s) ===== */
+.panel{ animation-duration:2.6s !important; animation-timing-function:cubic-bezier(.22,.62,.24,1) !important; }
+.card{ animation-duration:2.2s !important; animation-timing-function:cubic-bezier(.22,.62,.24,1) !important; }
+.masthead, .ribbon, .app-invite, .choose{ animation:softIn 2.4s cubic-bezier(.22,.62,.24,1) both; }
+@keyframes softIn{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
+@media(prefers-reduced-motion:reduce){ .panel,.card,.masthead,.ribbon,.app-invite,.choose{ animation:none !important } }
