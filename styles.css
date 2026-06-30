@@ -630,3 +630,24 @@ body.night .affirm,body.night .section-h small.note{ color:var(--ink2) !importan
 .btn{ padding:11px 22px; }
 .app-hero{ margin:12px 8px 8px; }
 .panel{ padding-bottom:6px; }
+
+/* ===== Compact sizing for real phones (smaller cards, tiles, fonts) ===== */
+.app-invite{ text-align:center; font-family:'Cormorant Garamond',serif; font-weight:600;
+  font-size:23px; color:var(--ink); margin:20px 12px 14px; line-height:1.25; }
+.card{ padding:13px 14px !important; margin-bottom:18px !important; }
+.fact .body{ font-size:16px; line-height:1.4; }
+.fact .deeper{ font-size:13px; margin-top:2px; }
+.fact .cat, .label{ font-size:11px; }
+.section-h h2{ font-size:21px; }
+.section-h{ margin:26px 0 12px; }
+.acts{ margin-top:11px; gap:8px; }
+.btn.sm, .btn.ghost.sm{ padding:7px 12px; font-size:13px; }
+.app-hero{ font-size:26px; margin:10px 8px 6px; }
+.ribbon{ font-size:12px; padding:7px 12px; }
+/* Home/Mind tiles ~half size */
+.choose{ gap:12px; }
+.choose-tile{ padding:13px 10px !important; }
+.choose-label{ font-size:18px; }
+/* Mind topic chips a touch smaller */
+.chip .nm{ font-size:14px; }
+.chip-ic{ width:23px; height:23px; }

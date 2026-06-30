@@ -457,7 +457,7 @@ function renderHome(){
 
     <div class="ribbon" style="margin-top:10px"><b>${esc(dateLong)}</b> · Day ${n} of ${d.getFullYear()} · Week ${isoWeek(d)} · ${season(d)} · ${mp.emoji} ${esc(mp.name)}</div>
 
-    <div class="section-h"><h2>Discover The Living Edit. Where should we begin?</h2></div>
+    <div class="app-invite">Welcome, what do you feel like?</div>
     <div class="choose">
       <button class="choose-tile choose-home" onclick="goTab(3)"><span class="choose-label">Clear the Home</span></button>
       <button class="choose-tile choose-mind" onclick="goTab(1)"><span class="choose-label">Calm the Mind</span></button>
