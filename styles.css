@@ -576,3 +576,7 @@ body.night .affirm,body.night .section-h small.note{ color:var(--ink2) !importan
 
 /* hide the old cosmetic nest heart (real Save button replaces it) */
 .nheart{ display:none !important; }
+
+/* app tagline / one-line explanation under the greeting */
+.app-tagline{ text-align:center; font-family:'Cormorant Garamond',serif; font-style:italic;
+  font-size:19px; line-height:1.3; color:var(--ink2); margin:10px 16px 18px; }

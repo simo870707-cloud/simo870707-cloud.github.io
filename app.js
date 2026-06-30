@@ -474,13 +474,13 @@ function renderHome(){
 
     <div class="ribbon" style="margin-top:10px"><b>${esc(dateLong)}</b> · Day ${n} of ${d.getFullYear()} · Week ${isoWeek(d)} · ${season(d)} · ${mp.emoji} ${esc(mp.name)}</div>
 
+    <div class="app-tagline">Things to learn, things to test, and things to love.</div>
     <div class="section-h"><h2>Where should we start?</h2></div>
     <div class="choose">
       <button class="choose-tile choose-home" onclick="goTab(3)"><span class="choose-label">Home</span><span class="choose-sub">Modern House Digest</span></button>
       <button class="choose-tile choose-mind" onclick="goTab(1)"><span class="choose-label">Mind</span><span class="choose-sub">Mind & Soul</span></button>
     </div>
 
-    <div class="section-h"><h2>Little facts big fun</h2></div>
     ${dailyFreeFacts(n).slice(0,2).map(function(k){return factCardSaveable(k,"mind");}).join("")}
     ${(typeof window!=="undefined"&&typeof window.nestDailyTip==="function")?homeTipCardSaveable(window.nestDailyTip(n)):""}
 
