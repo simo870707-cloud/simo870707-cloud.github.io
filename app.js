@@ -573,7 +573,7 @@ function renderAlmanac(){
     <div class="card quiet"><span class="frame"></span>
       <div class="muted ital" style="text-align:center;margin:2px 10px 2px">${esc(AFFIRMATIONS[n%AFFIRMATIONS.length])}</div>
       <div class="breath-circle" id="breathCircle"><svg class="breath-ring" viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="46"></circle><circle class="fg" id="breathRing" cx="50" cy="50" r="46"></circle></svg><div class="breath-photo"></div><span class="breath-label" id="breathText">Breathe</span></div>
-      <div class="center"><button class="btn ghost sm" id="breathBtn" onclick="toggleBreath()">Begin a minute</button></div>
+      <div class="center"><button class="btn ghost sm" id="breathBtn" onclick="toggleBreath()">Begin a minute</button> <button class="btn ghost sm" id="soundBtn" onclick="toggleBreathSound()">Rain: on</button></div>
     </div>
 
     <div class="section-h"><h2>🧩 Mystery of the Day</h2></div>
@@ -754,7 +754,7 @@ function setA11yText(v){if(!S.a11y)S.a11y={text:'normal',contrast:false};S.a11y.
 function toggleA11yContrast(){if(!S.a11y)S.a11y={text:'normal',contrast:false};S.a11y.contrast=!S.a11y.contrast;save();applyA11y();$('#a11yBody').innerHTML=a11yBody();ding();}
 function closeMenu(){$("#menu").classList.remove("open");$("#menuScrim").classList.remove("show");$("#hamb").classList.remove("x");}
 function goTab(n){closeMenu(); if(typeof S!=="undefined" && !S.unlocked && (n===1||n===3||n===5)){ openBilling(); return; } setTab(n);}
-function setTab(n){ try{setLoc(tabName(n));}catch(e){} try{setBotnav(n);}catch(e){}
+function setTab(n){ try{setLoc(tabName(n));}catch(e){} try{setBotnav(n);}catch(e){} try{breathFx();}catch(e){}
   if(n!==2)stopMic();
   tab=n;almStack=[];
   ["mi0","mi1","mi2"].forEach((id,i)=>{const el=$("#"+id);if(el)el.classList.toggle("on",i===n);});
@@ -1432,19 +1432,51 @@ var breathOn=false, breathStart=0;
 function setBreathText(t){ var e=document.getElementById("breathText"); if(e)e.textContent=t; }
 function toggleBreath(){
   var c=document.getElementById("breathCircle"), b=document.getElementById("breathBtn");
-  if(breathOn){ breathOn=false; if(c)c.classList.remove("breathing"); if(b)b.textContent="Begin a minute"; setBreathText("Breathe"); breathRing(289); return; }
+  if(breathOn){ breathOn=false; if(c)c.classList.remove("breathing"); if(b)b.textContent="Begin a minute"; setBreathText("Breathe"); breathRing(289); stopRain(); return; }
   breathOn=true; breathStart=Date.now(); breathRing(289); try{ding();}catch(e){}
-  if(c)c.classList.add("breathing"); if(b)b.textContent="Stop";
+  if(c)c.classList.add("breathing"); if(b)b.textContent="Stop"; if(breathSound) startRain();
   breathTick();
 }
 function breathTick(){
   if(!breathOn) return;
   var el=Date.now()-breathStart;
   if(el>=60000){ breathOn=false; var c=document.getElementById("breathCircle"), b=document.getElementById("breathBtn");
-    if(c)c.classList.remove("breathing"); if(b)b.textContent="Begin a minute"; breathRing(0); setBreathText("Well done \u2726"); try{ding("pop");}catch(e){} return; }
+    if(c)c.classList.remove("breathing"); if(b)b.textContent="Begin a minute"; breathRing(0); stopRain(); setBreathText("Well done \u2726"); try{ding("pop");}catch(e){} return; }
   breathRing(289*(1-el/60000)); var p=el%10000;
   setBreathText(p<4000?"Breathe in":(p<6000?"Hold":"Breathe out"));
   setTimeout(breathTick,250);
 }
 
 function breathRing(o){ var r=document.getElementById("breathRing"); if(r) r.style.strokeDashoffset=o; }
+
+
+/* ===== Rain ambience (synth, no asset) ===== */
+var rainSrc=null, rainGain=null, breathSound=true;
+function startRain(){ try{ actx=actx||new(window.AudioContext||window.webkitAudioContext)(); if(rainSrc) return;
+  var n=2*actx.sampleRate, buf=actx.createBuffer(1,n,actx.sampleRate), d=buf.getChannelData(0), last=0;
+  for(var i=0;i<n;i++){ var w=Math.random()*2-1; last=(last+0.02*w)/1.02; d[i]=last*3.4; }
+  var src=actx.createBufferSource(); src.buffer=buf; src.loop=true;
+  var lp=actx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=1100;
+  var hp=actx.createBiquadFilter(); hp.type="highpass"; hp.frequency.value=420;
+  rainGain=actx.createGain(); rainGain.gain.value=0.0001;
+  src.connect(hp); hp.connect(lp); lp.connect(rainGain); rainGain.connect(actx.destination); src.start(0);
+  rainGain.gain.exponentialRampToValueAtTime(0.10, actx.currentTime+1.6); rainSrc=src;
+}catch(e){} }
+function stopRain(){ try{ if(rainGain&&actx){ rainGain.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+0.7); }
+  var sx=rainSrc; rainSrc=null; rainGain=null; if(sx) setTimeout(function(){ try{sx.stop();}catch(e){} },800); }catch(e){} }
+function toggleBreathSound(){ breathSound=!breathSound; var b=document.getElementById("soundBtn"); if(b)b.textContent="Rain: "+(breathSound?"on":"off");
+  if(typeof breathOn!=="undefined"&&breathOn){ if(breathSound) startRain(); else stopRain(); } }
+
+/* ===== Adaptive background by time of day ===== */
+function applyTimeTheme(){ try{ var h=new Date().getHours(), g;
+  if(h>=5&&h<11) g="linear-gradient(180deg,#FCEFD6 0%,#F6E5C7 100%)";
+  else if(h>=11&&h<17) g="linear-gradient(180deg,#F7F1E6 0%,#EFE7D6 100%)";
+  else if(h>=17&&h<21) g="linear-gradient(180deg,#DEE0EA 0%,#C6CBDD 100%)";
+  else g="linear-gradient(180deg,#D2D5E2 0%,#BAC0D4 100%)";
+  document.documentElement.style.setProperty("--page-bg", g);
+}catch(e){} }
+
+/* ===== Breathe-with-me transition on screen switch ===== */
+function breathFx(){ var el=document.getElementById("breathFx"); if(!el) return; el.classList.remove("go"); void el.offsetWidth; el.classList.add("go"); setTimeout(function(){ if(el)el.classList.remove("go"); },700); }
+
+try{ applyTimeTheme(); setInterval(applyTimeTheme, 300000); }catch(e){}

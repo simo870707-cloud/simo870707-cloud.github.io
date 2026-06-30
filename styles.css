@@ -458,7 +458,7 @@ html,body{overflow-x:hidden;max-width:100%}
 }
 /* flat cream backdrop; retire the purple aurora sky */
 #aurora-sky{ display:none !important; }
-html,body,body.night{ background:#F4EFE4 !important; color:var(--ink) !important; }
+html,body,body.night{ background:var(--page-bg,#F4EFE4) !important; color:var(--ink) !important; }
 
 /* surfaces: warm ivory with a soft gold hairline */
 .card,.notecard,.plus,.tool,.note-paper,.sheet-card,
@@ -608,3 +608,11 @@ body.night .affirm,body.night .section-h small.note{ color:var(--ink2) !importan
 @keyframes breathe{ 0%{transform:scale(.84)} 40%{transform:scale(1.06)} 60%{transform:scale(1.06)} 100%{transform:scale(.84)} }
 @keyframes breathDrift{ 0%{transform:scale(1) rotate(0deg)} 100%{transform:scale(1.18) rotate(12deg)} }
 @media(prefers-reduced-motion:reduce){ .breath-circle.breathing .breath-photo{animation:none} .breath-photo::before{animation:none} }
+
+/* Breathe-with-me transition shape */
+.breath-fx{ position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center; pointer-events:none; }
+.breath-fx.go{ display:flex; }
+.breath-fx.go::after{ content:""; width:46px; height:46px; border:2px solid var(--gold); border-radius:16px;
+  animation:bfx .7s cubic-bezier(.2,.7,.2,1) forwards; }
+@keyframes bfx{ 0%{transform:scale(.3) rotate(0deg); opacity:0} 28%{opacity:.85} 100%{transform:scale(3.4) rotate(45deg); opacity:0} }
+@media(prefers-reduced-motion:reduce){ .breath-fx.go::after{ animation:none } }
