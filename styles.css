@@ -693,3 +693,50 @@ body.night .empty-state .empty-heart{ color:#C7AE7C; }
 .brand-night{ display:none !important; }
 body.night .brand-day{ display:none !important; }
 body.night .brand-night{ display:block !important; }
+
+/* ================= Readable dark theme (night) ================= */
+body.night{ color:#ECE4D4 !important; }
+
+/* Surfaces -> dark charcoal with light text */
+body.night .card, body.night .notecard, body.night .plus, body.night .tool,
+body.night .note-paper, body.night .sheet-card, body.night .choose-tile{
+  background:#22242E !important; border-color:rgba(199,174,124,.26) !important;
+  box-shadow:0 6px 20px rgba(0,0,0,.42) !important; color:#ECE4D4 !important; }
+body.night .choose-home{ background:linear-gradient(180deg,#262835,#1d1f28) !important; }
+body.night .choose-mind{ background:linear-gradient(180deg,#262835,#1d1f28) !important; }
+
+/* Inputs stay a readable light field */
+body.night input, body.night textarea{ background:#FCF9F1 !important; color:#26272C !important; }
+
+/* Nav, drawer, bottom nav -> dark */
+body.night .nav, body.night #menu, body.night .botnav{
+  background:#191b22 !important; border-color:rgba(199,174,124,.22) !important; }
+body.night .navtitle{ color:#F3ECDC !important; }
+body.night .hamburger span{ background:var(--gold) !important; }
+body.night .botnav-item{ color:#B7BCC0 !important; }
+body.night .botnav-item.on{ color:var(--gold) !important; }
+
+/* Headings / hero / labels on the dark backdrop -> light */
+body.night .masthead h1, body.night .masthead .muted, body.night .section-h h2,
+body.night .app-hero, body.night .app-invite, body.night h1, body.night h2,
+body.night h3, body.night .serif, body.night .choose-label{ color:#F3ECDC !important; }
+body.night .muted, body.night .app-tagline, body.night .ital,
+body.night .choose-sub, body.night .qotd .ans{ color:#C4C0B4 !important; }
+
+/* Date ribbon / clock */
+body.night .ribbon, body.night .ribbon b, body.night #clock, body.night .clock{
+  color:#DED2B7 !important; border-color:rgba(199,174,124,.4) !important; }
+
+/* Keep gold accents */
+body.night .label, body.night .kicker, body.night .masthead .kicker,
+body.night .menu-h, body.night .fact .label{ color:var(--gold) !important; }
+
+/* Buttons on dark */
+body.night .btn{ background:var(--gold) !important; border-color:var(--gold) !important; color:#20222B !important; }
+body.night .btn.ghost{ background:transparent !important; color:#EDE5D5 !important; border-color:var(--gold) !important; }
+body.night .card .frame{ opacity:.3 !important; }
+
+/* Night: topic chips / tiles -> dark with light text */
+body.night .chip, body.night .nchip, body.night .ntile, body.night .calbtn, body.night .iconbtn{
+  background:#22242E !important; border-color:rgba(199,174,124,.26) !important; color:#ECE4D4 !important; }
+body.night .chip .nm, body.night .nchip *, body.night .ntile *{ color:#ECE4D4 !important; }
