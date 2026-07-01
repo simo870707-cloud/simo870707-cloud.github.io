@@ -12,7 +12,7 @@
  *
  * Bump CACHE_VERSION whenever the precached shell changes.
  */
-const CACHE_VERSION = "tle-v8";
+const CACHE_VERSION = "tle-v9";
 const CACHE = CACHE_VERSION;
 
 // Core app shell — cached on install so the app boots offline.
@@ -22,13 +22,13 @@ const PRECACHE = [
   "./manifest.webmanifest",
   "./manifest.json",
   "./favicon.ico",
-  "./favicon-16.png?v=3",
-  "./favicon-32.png?v=3",
-  "./apple-touch-icon.png?v=3",
-  "./icon-192.png?v=3",
-  "./icon-512.png?v=3",
-  "./icon-192-maskable.png?v=3",
-  "./icon-512-maskable.png?v=3",
+  "./favicon-16.png?v=4",
+  "./favicon-32.png?v=4",
+  "./apple-touch-icon.png?v=4",
+  "./icon-192.png?v=4",
+  "./icon-512.png?v=4",
+  "./icon-192-maskable.png?v=4",
+  "./icon-512-maskable.png?v=4",
 ];
 
 self.addEventListener("install", (event) => {
@@ -102,8 +102,8 @@ self.addEventListener("periodicsync", (event) => {
     event.waitUntil(
       self.registration.showNotification("CuriO — The Daybook", {
         body: "Today's wonder is ready. ✦",
-        icon: "icon-192.png?v=3",
-        badge: "favicon-32.png?v=3",
+        icon: "icon-192.png?v=4",
+        badge: "favicon-32.png?v=4",
         tag: "curio-daily",
       })
     );
