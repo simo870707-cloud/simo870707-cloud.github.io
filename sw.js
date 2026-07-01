@@ -22,13 +22,13 @@ const PRECACHE = [
   "./manifest.webmanifest",
   "./manifest.json",
   "./favicon.ico",
-  "./favicon-16.png?v=2",
-  "./favicon-32.png?v=2",
-  "./apple-touch-icon.png?v=2",
-  "./icon-192.png?v=2",
-  "./icon-512.png?v=2",
-  "./icon-192-maskable.png?v=2",
-  "./icon-512-maskable.png?v=2",
+  "./favicon-16.png?v=3",
+  "./favicon-32.png?v=3",
+  "./apple-touch-icon.png?v=3",
+  "./icon-192.png?v=3",
+  "./icon-512.png?v=3",
+  "./icon-192-maskable.png?v=3",
+  "./icon-512-maskable.png?v=3",
 ];
 
 self.addEventListener("install", (event) => {
@@ -102,8 +102,8 @@ self.addEventListener("periodicsync", (event) => {
     event.waitUntil(
       self.registration.showNotification("CuriO — The Daybook", {
         body: "Today's wonder is ready. ✦",
-        icon: "icon-192.png?v=2",
-        badge: "favicon-32.png?v=2",
+        icon: "icon-192.png?v=3",
+        badge: "favicon-32.png?v=3",
         tag: "curio-daily",
       })
     );
