@@ -453,7 +453,7 @@ function renderHome(){
   return `<div class="panel">
     ${isBday?`<div class="bdaybanner">🎂 Happy birthday${S.name?', '+esc(S.name):''}!<span>Wishing you a year full of discovery.</span><button class="btn sm" style="margin-top:8px" onclick="birthdayFX()">🎉 Celebrate again</button></div>`:""}
 
-    <div class="masthead" style="margin-top:4px"><img src="logo-mark.png?v=3" alt="The Living Edit" style="height:84px;width:auto;display:block;margin:0 auto 2px"><div class="app-hero">Things to learn, things to test, and things to love.</div></div>
+    <div class="masthead" style="margin-top:4px"><span class="brand-lockup"><img class="brand-day" src="logo-mark.png?v=8" alt="The Living Edit — Home & Mind"><img class="brand-night" src="logo-mark-night.png?v=8" alt="The Living Edit — Home & Mind"></span><div class="app-hero">Things to learn, things to test, and things to love.</div></div>
 
     <div class="ribbon" style="margin-top:10px"><b>${esc(dateLong)}</b> · Day ${n} of ${d.getFullYear()} · Week ${isoWeek(d)} · ${season(d)} · ${mp.emoji} ${esc(mp.name)}</div>
 
@@ -1275,7 +1275,7 @@ function showOnboarding(){ obStep=0; obPick={}; var _bn=document.getElementById(
 function renderOb(){ var v=document.getElementById("view"); if(!v) return;
   if(obStep===0){
     v.innerHTML='<div class="panel ob">'+
-      '<div class="ob-logo"><img src="logo-mark.png?v=3" alt="The Living Edit" style="height:92px"></div>'+
+      '<div class="ob-logo"><span class="brand-lockup ob"><img class="brand-day" src="logo-mark.png?v=8" alt="The Living Edit — Home & Mind"><img class="brand-night" src="logo-mark-night.png?v=8" alt="The Living Edit — Home & Mind"></span></div>'+
       '<h1 class="serif" style="font-size:34px;text-align:center;margin:8px 0 2px">The Living Edit</h1>'+
       '<div class="kicker" style="text-align:center">Home &amp; Mind</div>'+
       '<p class="muted ital center" style="max-width:320px;margin:16px auto 22px">A calm daily edit — a few curious facts for your home and your mind, every day.</p>'+

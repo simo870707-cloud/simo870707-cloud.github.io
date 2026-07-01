@@ -685,3 +685,11 @@ body.night .seg .btn.on{ background:#C7AE7C !important; color:#1b1206 !important
 .empty-state{ padding:26px 18px !important; }
 .empty-state .empty-heart{ font-size:34px; color:var(--gold); line-height:1; margin-bottom:8px; }
 body.night .empty-state .empty-heart{ color:#C7AE7C; }
+
+/* ===== Brand lockup (full logo: monogram + wordmark + Home & Mind) ===== */
+.brand-lockup{ display:block; text-align:center; }
+.brand-lockup img{ height:158px; width:auto; display:block; margin:0 auto 2px; }
+.brand-lockup.ob img{ height:134px; }
+.brand-night{ display:none !important; }
+body.night .brand-day{ display:none !important; }
+body.night .brand-night{ display:block !important; }
