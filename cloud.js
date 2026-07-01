@@ -115,8 +115,8 @@
     if(typeof openAppSheet!=="function") return;
     openAppSheet(
       '<h2 class="serif" style="font-size:24px;margin:0 0 6px">Enter your code</h2>'+
-      '<div class="muted ital" style="margin-bottom:14px">We emailed a 6-digit code to <b>'+esc(pendingEmail)+'</b>. Enter it below.</div>'+
-      '<div class="inrow" style="margin:4px 0 4px"><input id="cloudCode" class="grow" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456" aria-label="6-digit code" style="background:#FCF9F1;border:1px solid var(--line);border-radius:9px;padding:9px 11px;letter-spacing:4px;font-size:18px;text-align:center"><button class="btn sm" onclick="cloudVerifyCode(document.getElementById(\'cloudCode\').value)">Verify</button></div>'+
+      '<div class="muted ital" style="margin-bottom:14px">We emailed a sign-in code to <b>'+esc(pendingEmail)+'</b>. Enter it below.</div>'+
+      '<div class="inrow" style="margin:4px 0 4px"><input id="cloudCode" class="grow" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="Enter code" aria-label="Sign-in code" style="background:#FCF9F1;border:1px solid var(--line);border-radius:9px;padding:9px 11px;letter-spacing:4px;font-size:18px;text-align:center"><button class="btn sm" onclick="cloudVerifyCode(document.getElementById(\'cloudCode\').value)">Verify</button></div>'+
       '<div class="muted ital" style="font-size:12px;margin-top:10px">Didn’t get it? Check spam, or <a href="#" onclick="cloudSendCode(\''+esc(pendingEmail).replace(/'/g,"\\'")+'\');return false;" style="color:var(--gold)">send a new code</a>.</div>'
     );
     setTimeout(function(){ var el=document.getElementById("cloudCode"); if(el) el.focus(); }, 120);
@@ -150,7 +150,7 @@
           '</div>';
       } else {
         html='<h2 class="serif" style="font-size:24px;margin:0 0 6px">Sync across devices</h2>'+
-          '<div class="muted ital" style="margin-bottom:14px">Sign in to back up your saved facts and settings and get them on any device. No password — we email you a 6-digit code.</div>'+
+          '<div class="muted ital" style="margin-bottom:14px">Sign in to back up your saved facts and settings and get them on any device. No password — we email you a one-time code.</div>'+
           '<div class="inrow" style="margin:4px 0 4px"><input id="cloudEmail" class="grow" type="email" autocomplete="email" placeholder="you@example.com" aria-label="Email address" style="background:#FCF9F1;border:1px solid var(--line);border-radius:9px;padding:9px 11px"><button class="btn sm" onclick="cloudSendCode(document.getElementById(\'cloudEmail\').value)">Send code</button></div>'+
           '<div class="muted ital" style="font-size:12px;margin-top:8px">Your data stays private to you.</div>';
       }
