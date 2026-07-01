@@ -1318,6 +1318,7 @@ function openSettings(){ var cur=(typeof S!=="undefined" && S && S.theme)||"auto
   '</div>'+
   '<div class="muted ital" style="font-size:12px;margin-bottom:16px">Auto follows the time of day — light by day, dark at night.</div>'+
   '<div class="inrow" style="flex-direction:column;gap:9px;align-items:stretch">'+
+    '<button class="btn ghost" onclick="closeAppSheet();openAccount();">Sign in &amp; sync</button>'+
     '<button class="btn ghost" onclick="closeAppSheet();curioReminder();">Daily reminder</button>'+
     '<button class="btn ghost" onclick="closeAppSheet();openA11y();">Accessibility</button>'+
     
