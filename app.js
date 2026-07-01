@@ -773,7 +773,7 @@ checkReminders();
 if('serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js').catch(()=>{});}catch(e){}}
 
 (function(){
-  function applyDayNight(){var h=new Date().getHours();var night=(h>=18||h<6);
+  function applyDayNight(){var night=(typeof nightWanted==="function")?nightWanted():((new Date().getHours()>=18)||(new Date().getHours()<6));
     document.body.classList.toggle("night",night);
     var mt=document.querySelector('meta[name=theme-color]');if(mt)mt.setAttribute('content',night?'#0e1830':'#f1e7d2');}
   applyDayNight();
@@ -1006,7 +1006,7 @@ if('serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js').c
     var h=new Date().getHours(), p=phaseFor(h);
     var layers=sky.querySelectorAll('.aurora-layer');
     for(var i=0;i<layers.length;i++){ layers[i].classList.toggle('on', layers[i].getAttribute('data-p')===p); }
-    try{ document.body.classList.toggle('night', (h>=18||h<6)); }catch(e){}
+    try{ document.body.classList.toggle('night', (typeof nightWanted==="function")?nightWanted():(h>=18||h<6)); }catch(e){}
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', build); else build();
   setInterval(apply, 60000);
@@ -1305,11 +1305,18 @@ function tabName(n){ return n===1?"Mind & Soul":n===2?"Organizer":n===3?"Modern 
 function openAppSheet(html){ closeMenu(); document.getElementById("appSheetBody").innerHTML=html+'<div class="center" style="margin-top:18px"><button class="btn ghost" onclick="closeAppSheet()">Done</button></div>'; document.getElementById("appSheet").classList.add("show"); }
 function closeAppSheet(){ document.getElementById("appSheet").classList.remove("show"); }
 
-function openSettings(){ openAppSheet(
+function openSettings(){ var cur=(typeof S!=="undefined" && S && S.theme)||"auto"; openAppSheet(
   '<h2 class="serif" style="font-size:25px;margin:0 0 4px">Settings</h2>'+
   '<div class="muted ital" style="margin-bottom:16px">Your details and preferences.</div>'+
   '<div class="label">Your name</div>'+
   '<div class="inrow" style="margin:4px 0 16px"><input id="setName" class="grow" value="'+esc(S.name||"")+'" placeholder="Your name" aria-label="Your name" style="background:#FCF9F1;border:1px solid var(--line);border-radius:9px;padding:9px 11px"><button class="btn sm" onclick="S.name=(document.getElementById(\'setName\').value||\'\').trim();save();ding();toast(\'Saved\');">Save</button></div>'+
+  '<div class="label">Appearance</div>'+
+  '<div id="themeSeg" class="seg" style="display:flex;gap:8px;margin:6px 0 6px">'+
+    '<button class="btn ghost sm'+(cur==="auto"?" on":"")+'" data-th="auto" onclick="setTheme(\'auto\')">Auto</button>'+
+    '<button class="btn ghost sm'+(cur==="light"?" on":"")+'" data-th="light" onclick="setTheme(\'light\')">Light</button>'+
+    '<button class="btn ghost sm'+(cur==="dark"?" on":"")+'" data-th="dark" onclick="setTheme(\'dark\')">Dark</button>'+
+  '</div>'+
+  '<div class="muted ital" style="font-size:12px;margin-bottom:16px">Auto follows the time of day — light by day, dark at night.</div>'+
   '<div class="inrow" style="flex-direction:column;gap:9px;align-items:stretch">'+
     '<button class="btn ghost" onclick="closeAppSheet();curioReminder();">Daily reminder</button>'+
     '<button class="btn ghost" onclick="closeAppSheet();openA11y();">Accessibility</button>'+
@@ -1347,7 +1354,7 @@ function renderSaved(){
   function listHTML(kind,title){
     var themes=groups[kind], keys=Object.keys(themes).sort();
     var out='<div class="section-h"><h2>'+title+'</h2></div>';
-    if(!keys.length){ return out+'<div class="card center muted ital">Nothing saved here yet — tap ♡ on a fact to keep it.</div>'; }
+    if(!keys.length){ return out+'<div class="card center empty-state"><div class="empty-heart">♡</div><div class="muted ital">Nothing saved here yet.<br>Tap ♡ on any fact to keep it.</div></div>'; }
     keys.forEach(function(th){
       out+='<div class="label" style="margin:16px 0 6px">'+esc(th)+'</div>';
       themes[th].slice().reverse().forEach(function(x){
@@ -1478,13 +1485,24 @@ function toggleBreathSound(){ breathSound=!breathSound; var b=document.getElemen
   if(typeof breathOn!=="undefined"&&breathOn){ if(breathSound) startRain(); else stopRain(); } }
 
 /* ===== Adaptive background by time of day ===== */
-function applyTimeTheme(){ try{ var h=new Date().getHours(), g;
-  if(h>=5&&h<11) g="linear-gradient(180deg,#FCEFD6 0%,#F6E5C7 100%)";
-  else if(h>=11&&h<17) g="linear-gradient(180deg,#F7F1E6 0%,#EFE7D6 100%)";
-  else if(h>=17&&h<21) g="linear-gradient(180deg,#DEE0EA 0%,#C6CBDD 100%)";
-  else g="linear-gradient(180deg,#D2D5E2 0%,#BAC0D4 100%)";
+function applyTimeTheme(){ try{ var g;
+  if(typeof nightWanted==="function" && nightWanted()){ g="linear-gradient(180deg,#141a2b 0%,#0b1019 100%)"; }
+  else { var h=new Date().getHours();
+    if(h>=5&&h<11) g="linear-gradient(180deg,#FCEFD6 0%,#F6E5C7 100%)";
+    else if(h>=11&&h<17) g="linear-gradient(180deg,#F7F1E6 0%,#EFE7D6 100%)";
+    else if(h>=17&&h<21) g="linear-gradient(180deg,#DEE0EA 0%,#C6CBDD 100%)";
+    else g="linear-gradient(180deg,#D2D5E2 0%,#BAC0D4 100%)"; }
   document.documentElement.style.setProperty("--page-bg", g);
 }catch(e){} }
+
+/* ===== Theme preference: Auto (by time) / Light / Dark ===== */
+function nightWanted(){ var t=(typeof S!=="undefined" && S && S.theme)||"auto"; if(t==="dark")return true; if(t==="light")return false; var h=new Date().getHours(); return (h>=18||h<6); }
+function applyThemeNow(){ try{ var night=nightWanted(); document.body.classList.toggle("night",night);
+  var mt=document.querySelector('meta[name=theme-color]'); if(mt)mt.setAttribute('content',night?'#0e1830':'#f1e7d2');
+  applyTimeTheme(); }catch(e){} }
+function setTheme(v){ if(typeof S!=="undefined" && S){ S.theme=v; try{save();}catch(e){} } applyThemeNow(); try{ding();}catch(e){}
+  if(typeof toast==="function") toast(v==="auto"?"Theme follows the time of day":(v==="dark"?"Dark theme on":"Light theme on"));
+  var box=document.getElementById("themeSeg"); if(box){ var b=box.querySelectorAll("button"); for(var i=0;i<b.length;i++){ b[i].classList.toggle("on", b[i].getAttribute("data-th")===v); } } }
 
 /* ===== Breathe-with-me transition on screen switch ===== */
 function breathFx(){ var el=document.getElementById("breathFx"); if(!el) return; el.classList.remove("go"); void el.offsetWidth; el.classList.add("go"); setTimeout(function(){ if(el)el.classList.remove("go"); },700); }

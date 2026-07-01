@@ -677,3 +677,11 @@ body.night .affirm,body.night .section-h small.note{ color:var(--ink2) !importan
 @keyframes softIn{ from{opacity:0; transform:translateY(26px)} to{opacity:1; transform:none} }
 .panel{ animation:softIn 3.6s ease-in-out both !important; }
 .card, .masthead, .ribbon, .app-invite, .choose{ animation:none !important; }
+
+/* ===== Polish: theme segmented control + empty states ===== */
+.seg .btn.on{ background:var(--gold) !important; color:#2b2114 !important; border-color:var(--gold) !important; box-shadow:0 2px 8px rgba(120,90,40,.22) !important; }
+body.night .seg .btn.on{ background:#C7AE7C !important; color:#1b1206 !important; border-color:#C7AE7C !important; }
+.seg .btn{ flex:1; }
+.empty-state{ padding:26px 18px !important; }
+.empty-state .empty-heart{ font-size:34px; color:var(--gold); line-height:1; margin-bottom:8px; }
+body.night .empty-state .empty-heart{ color:#C7AE7C; }
