@@ -91,7 +91,7 @@
     if(!email || email.indexOf("@")<1){ if(typeof toast==="function") toast("Enter a valid email"); return; }
     sbc.auth.signInWithOtp({ email:email, options:{ emailRedirectTo: location.origin + location.pathname } })
       .then(function(r){
-        if(r.error){ if(typeof toast==="function") toast("Couldn't send link — try again"); }
+        if(r.error){ if(typeof toast==="function") toast("Sign-in error: "+(r.error.message||r.error.status||"unknown")); }
         else { if(typeof toast==="function") toast("Check your email for a sign-in link ✦"); if(typeof closeAppSheet==="function") closeAppSheet(); }
       });
   };
