@@ -672,3 +672,8 @@ body.night .affirm,body.night .section-h small.note{ color:var(--ink2) !importan
 .masthead, .ribbon, .app-invite, .choose{ animation:softIn 2.4s cubic-bezier(.22,.62,.24,1) both; }
 @keyframes softIn{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
 @media(prefers-reduced-motion:reduce){ .panel,.card,.masthead,.ribbon,.app-invite,.choose{ animation:none !important } }
+
+/* ===== Slow, single delicate screen entrance (~3.5s) ===== */
+@keyframes softIn{ from{opacity:0; transform:translateY(26px)} to{opacity:1; transform:none} }
+.panel{ animation:softIn 3.6s ease-in-out both !important; }
+.card, .masthead, .ribbon, .app-invite, .choose{ animation:none !important; }

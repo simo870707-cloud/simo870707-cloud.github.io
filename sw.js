@@ -12,7 +12,7 @@
  *
  * Bump CACHE_VERSION whenever the precached shell changes.
  */
-const CACHE_VERSION = "tle-v4";
+const CACHE_VERSION = "tle-v5";
 const CACHE = CACHE_VERSION;
 
 // Core app shell — cached on install so the app boots offline.
@@ -82,19 +82,16 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // 3. Same-origin assets: stale-while-revalidate.
+  // 3. Same-origin assets: network-first (always latest when online, cache fallback offline).
   if (url.origin === self.location.origin) {
     event.respondWith(
-      caches.match(req).then((cached) => {
-        const network = fetch(req).then((res) => {
-          if (res && res.status === 200) {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(req, copy));
-          }
-          return res;
-        }).catch(() => cached);
-        return cached || network;
-      })
+      fetch(req).then((res) => {
+        if (res && res.status === 200) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy));
+        }
+        return res;
+      }).catch(() => caches.match(req))
     );
   }
 });
