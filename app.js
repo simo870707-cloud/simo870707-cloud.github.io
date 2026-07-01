@@ -898,7 +898,12 @@ if('serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js').c
   window.nestSaveToggle=function(el){var on=el.classList.toggle('on');el.textContent=on?'♥':'♡';};
   window.nestJump=function(i){var e=document.getElementById('nsec'+i);if(e)e.scrollIntoView({behavior:'smooth',block:'start'});};
   window.nestSurprise=function(){var t=document.querySelectorAll('.nest .ntile');if(!t.length)return;var p=t[Math.floor(Math.random()*t.length)];p.scrollIntoView({behavior:'smooth',block:'center'});p.style.animation='none';void p.offsetWidth;p.style.animation='nestPop .6s';try{if(window.ding)ding('pop');}catch(e){}};
-  window.nestDailyTip=function(nn){ var all=[]; NEST.forEach(function(sec){ (sec.topics||[]).forEach(function(t){ all.push({t:t,s:sec}); }); }); if(!all.length) return null; var p=all[nn%all.length]; return { title:L(p.t.t), body:L(p.t.b), theme:L(p.s.name) }; };
+  window.nestDailyTip=function(nn){
+    var all=[]; NEST.forEach(function(sec){ (sec.topics||[]).forEach(function(t){ all.push({t:t,s:sec}); }); }); if(!all.length) return null;
+    try{ var MAP={ "Cleaning & Care":["Cleaning"], "Organising":["Organization"], "Plants & Garden":["Garden"], "Home & Decor":["DIY Projects","Household Management"], "Cooking":["Sustainable Home"] };
+      if(typeof S!=="undefined" && S && S.interests && S.interests.length){ var want=[]; S.interests.forEach(function(it){ (MAP[it]||[]).forEach(function(nm){ if(want.indexOf(nm)<0) want.push(nm); }); });
+        if(want.length){ var pref=all.filter(function(x){ return want.indexOf(x.s.name[0])>=0; }); if(pref.length) all=pref; } } }catch(e){}
+    var p=all[nn%all.length]; return { title:L(p.t.t), body:L(p.t.b), theme:L(p.s.name) }; };
 })();
 
 /* How-To — additive page (tab 4). Self-localises EN/FR/IT/DE/RO. Includes a search
@@ -1368,8 +1373,24 @@ function setBotnav(n){ var bn=document.getElementById("botnav"); if(!bn) return;
   var it=bn.querySelectorAll(".botnav-item"); for(var i=0;i<it.length;i++){ var t=+it[i].dataset.t; it[i].classList.toggle("on", t===n); it[i].classList.toggle("locked", locked && (t===1||t===3||t===5)); } }
 
 /* 3 distinct daily facts for the free Today page (rotate by day-of-year) */
-function dailyFreeFacts(n){ var L=FACTS.length, a=n%L, b=(n+Math.floor(L/3))%L, c=(n+Math.floor(2*L/3))%L;
-  var arr=[a]; if(arr.indexOf(b)<0)arr.push(b); if(arr.indexOf(c)<0)arr.push(c); return arr; }
+var INTEREST_CATS={
+  "Cooking":["nutrition"],
+  "Plants & Garden":["nature","agriculture"],
+  "Space & Astronomy":["space"],
+  "History":["history"],
+  "Nature & Animals":["nature","animals"],
+  "Science":["science","numbers","body","tech","programming"],
+  "Art & Culture":["culture","symbols","sayings"],
+  "Travel & Places":["geography","travel"],
+  "Wellbeing":["body","wisdom"]
+};
+function preferredCats(){ if(typeof S==="undefined"||!S||!Array.isArray(S.interests)) return []; var out=[]; S.interests.forEach(function(it){ (INTEREST_CATS[it]||[]).forEach(function(c){ if(out.indexOf(c)<0) out.push(c); }); }); return out; }
+function dailyFreeFacts(n){
+  var all=FACTS.map(function(f,i){return i;}), prefs=preferredCats(), pool=all;
+  if(prefs.length){ var f=all.filter(function(i){ return prefs.indexOf(FACTS[i].cat)>=0; }); if(f.length>=3) pool=f; }
+  var P=pool.length, a=pool[n%P], b=pool[(n+Math.floor(P/3))%P], c=pool[(n+Math.floor(2*P/3))%P];
+  var arr=[a]; if(arr.indexOf(b)<0)arr.push(b); if(arr.indexOf(c)<0)arr.push(c); return arr;
+}
 
 
 /* ===== Generalized saving (FACTS + Home Digest items) ===== */
