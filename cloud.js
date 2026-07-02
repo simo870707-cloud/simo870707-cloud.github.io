@@ -56,7 +56,10 @@
       if(li.length) S.interests = li;
 
       S.onboarded = S.onboarded || remote.onboarded;
-      if(remote.unlocked) S.unlocked = true;
+      /* Membership follows the account: the cloud record is authoritative on sign-in. */
+      if(typeof remote.premium !== "undefined"){ S.premium = !!remote.premium; }
+      else if(remote.unlocked){ S.premium = true; }   /* migrate older records that only had 'unlocked' */
+      S.unlocked = !!S.premium;
     }catch(e){}
   }
   function cloudSync(){
@@ -65,7 +68,10 @@
       return cloudPull().then(function(remote){
         cloudMerge(remote);
         try{ save(); }catch(e){}
-        return cloudPush();
+        return cloudPush().then(function(){
+          /* reconcile account membership with Google Play (grant/revoke on the owning device) */
+          try{ if(typeof checkBillingEntitlement==="function") checkBillingEntitlement(); }catch(e){}
+        });
       });
     });
   }
@@ -125,11 +131,15 @@
     if(!sbc) return;
     sbc.auth.signOut().then(function(){
       window.__cloudReady = false;
-      if(typeof toast==="function") toast("Signed out");
+      /* membership follows the account -> lock the app on sign out */
+      try{ S.premium=false; S.unlocked=false; if(typeof save==="function") save(); }catch(e){}
+      if(typeof toast==="function") toast("Signed out — sign in to unlock your membership");
       if(typeof closeAppSheet==="function") closeAppSheet();
+      try{ if(typeof setTab==="function") setTab(0); }catch(e){}
     });
   };
   window.cloudSync = cloudSync;
+  window.cloudPush = cloudPush;
 
   /* ---- Account sheet in Settings ---- */
   window.openAccount = function(){

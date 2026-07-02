@@ -1551,15 +1551,32 @@ function buyPlan(which){
     }catch(e){ /* ignore */ }
   });
 }
-function grantPremium(){ S.unlocked=true; S.paid=true; save(); try{ding("pop");}catch(e){} toast("Welcome to The Living EDIT+ ✦"); setTab(typeof tab!=="undefined"?tab:0); }
-/* On launch, ask Google whether this user already has an active subscription */
+function grantPremium(){
+  S.premium=true; S.unlocked=true; S.paid=true;
+  try{ localStorage.setItem("le_playowner","1"); }catch(e){}   /* this device owns the Play purchase */
+  save();
+  try{ if(window.__cloudReady && typeof cloudPush==="function") cloudPush(); }catch(e){}  /* attach membership to the signed-in account */
+  try{ding("pop");}catch(e){}
+  toast("Welcome to The Living EDIT+ ✦");
+  if(!window.__cloudReady){ setTimeout(function(){ try{ toast("Sign in to keep your membership on all your devices"); if(typeof openAccount==="function") openAccount(); }catch(e){} }, 1500); }
+  setTab(typeof tab!=="undefined"?tab:0);
+}
+/* Reconcile Google Play with the account. Called after sign-in/sync (see cloud.js).
+   Membership follows the email account; Google Play is used to grant it and to
+   revoke it on the device that actually owns the subscription. */
 function checkBillingEntitlement(){
   billingService().then(function(svc){
-    if(!svc || !svc.listPurchases) return;
+    if(!svc || !svc.listPurchases) return;                 /* can't verify (browser/offline) -> leave state as-is */
     svc.listPurchases().then(function(purchases){
       var active=purchases && purchases.some(function(p){ return p.itemId===PLANS.monthly.id || p.itemId===PLANS.yearly.id; });
-      if(active && !S.unlocked){ S.unlocked=true; save(); if(typeof tab!=="undefined") setTab(tab); }
+      var owner=false; try{ owner=localStorage.getItem("le_playowner")==="1"; }catch(e){}
+      if(active){
+        try{ localStorage.setItem("le_playowner","1"); }catch(e){}
+        if(!S.premium || !S.unlocked){ S.premium=true; S.unlocked=true; save(); try{ if(window.__cloudReady && typeof cloudPush==="function") cloudPush(); }catch(e){} if(typeof tab!=="undefined") setTab(tab); }
+      } else if(owner){
+        /* this device owned the subscription and Google now reports it inactive -> revoke */
+        if(S.premium || S.unlocked){ S.premium=false; S.unlocked=false; save(); try{ if(window.__cloudReady && typeof cloudPush==="function") cloudPush(); }catch(e){} if(typeof tab!=="undefined") setTab(tab); }
+      }
     }).catch(function(){});
   });
 }
-try{ checkBillingEntitlement(); }catch(e){}
