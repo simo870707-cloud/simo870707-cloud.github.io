@@ -140,6 +140,8 @@
   };
   window.cloudSync = cloudSync;
   window.cloudPush = cloudPush;
+  /* Returns the signed-in email, "" if signed in without email, or null if signed out. */
+  window.cloudCurrentEmail = function(){ return cloudUser().then(function(u){ return u ? (u.email||"") : null; }).catch(function(){ return null; }); };
 
   /* ---- Account sheet in Settings ---- */
   window.openAccount = function(){

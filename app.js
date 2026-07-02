@@ -1307,7 +1307,8 @@ function closeAppSheet(){ document.getElementById("appSheet").classList.remove("
 
 function openSettings(){ var cur=(typeof S!=="undefined" && S && S.theme)||"auto"; openAppSheet(
   '<h2 class="serif" style="font-size:25px;margin:0 0 4px">Settings</h2>'+
-  '<div class="muted ital" style="margin-bottom:16px">Your details and preferences.</div>'+
+  '<div class="muted ital" style="margin-bottom:12px">Your details and preferences.</div>'+
+  '<div id="acctRow" class="muted" style="font-size:13px;margin-bottom:16px">Checking account…</div>'+
   '<div class="label">Your name</div>'+
   '<div class="inrow" style="margin:4px 0 16px"><input id="setName" class="grow" value="'+esc(S.name||"")+'" placeholder="Your name" aria-label="Your name" style="background:#FCF9F1;border:1px solid var(--line);border-radius:9px;padding:9px 11px"><button class="btn sm" onclick="S.name=(document.getElementById(\'setName\').value||\'\').trim();save();ding();toast(\'Saved\');">Save</button></div>'+
   '<div class="label">Appearance</div>'+
@@ -1321,9 +1322,21 @@ function openSettings(){ var cur=(typeof S!=="undefined" && S && S.theme)||"auto
     '<button class="btn ghost" onclick="closeAppSheet();openAccount();">Sign in &amp; sync</button>'+
     '<button class="btn ghost" onclick="closeAppSheet();curioReminder();">Daily reminder</button>'+
     '<button class="btn ghost" onclick="closeAppSheet();openA11y();">Accessibility</button>'+
-    
-    
-  '</div>'); }
+
+
+  '</div>');
+  try{ updateAcctRow(); }catch(e){}
+}
+/* Fill the Settings account-status line: signed in (with Sign out) or not (with Sign in). */
+function updateAcctRow(){
+  var el=document.getElementById("acctRow"); if(!el) return;
+  if(typeof window.cloudCurrentEmail!=="function"){ el.style.display="none"; return; }
+  window.cloudCurrentEmail().then(function(email){
+    var e=document.getElementById("acctRow"); if(!e) return;
+    if(email){ e.innerHTML='Signed in as <b>'+esc(email)+'</b> &nbsp;&middot;&nbsp; <a href="#" onclick="cloudSignOut();return false;" style="color:var(--gold)">Sign out</a>'; }
+    else { e.innerHTML='Not signed in &nbsp;&middot;&nbsp; <a href="#" onclick="closeAppSheet();openAccount();return false;" style="color:var(--gold)">Sign in to sync</a>'; }
+  }).catch(function(){ var e=document.getElementById("acctRow"); if(e) e.style.display="none"; });
+}
 
 function openBilling(){ var b;
   if(typeof S!=="undefined" && S.unlocked){
