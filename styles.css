@@ -507,7 +507,7 @@ body.night .ribbon,body.night .ribbon b,body.night #clock,body.night .clock{
 /* category label on fact cards -> gold (was per-category color) */
 .fact .cat{ color:var(--gold) !important; }
 
-/* ===== The Living Edit brand — remaining screens (entire app) ===== */
+/* ===== The Living EDIT brand — remaining screens (entire app) ===== */
 /* night-sky card -> deep charcoal, not purple/blue */
 .skycard{ background:linear-gradient(180deg,#3A372F,#26241F) !important; color:#EDE6D6 !important;
   border:1px solid rgba(183,144,90,.30) !important; }

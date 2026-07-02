@@ -1,4 +1,4 @@
-/* ===== The Living Edit — optional cloud sync (Supabase) =====
+/* ===== The Living EDIT — optional cloud sync (Supabase) =====
  * Backs up the local state object S to a per-user row, protected by RLS.
  * Everything degrades gracefully: no connection / not signed in = app works
  * exactly as before, purely on-device.
