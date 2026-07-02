@@ -1329,12 +1329,23 @@ function openBilling(){ var b;
   if(typeof S!=="undefined" && S.unlocked){
     b='<h2 class="serif" style="font-size:25px;margin:0 0 8px">Billing</h2>'+
       '<div class="plus"><h2 class="serif">✦ You’re a member</h2><div class="px">You have full access to The Living EDIT+ — unlimited facts, every topic, your Saved page and personalised picks.</div></div>'+
-      '<div class="muted ital" style="margin-top:12px;font-size:13px">Manage or cancel anytime in your app store subscriptions.</div>';
+      '<div class="inrow" style="flex-direction:column;gap:9px;align-items:stretch;margin-top:14px">'+
+        '<button class="btn ghost" onclick="manageSubscription()">Manage or cancel subscription</button>'+
+      '</div>'+
+      '<div class="muted ital" style="margin-top:12px;font-size:13px">Opens your Google Play subscriptions, where you can cancel anytime. You keep access until the end of the paid period.</div>';
   } else {
     b='<h2 class="serif" style="font-size:25px;margin:0 0 8px">Billing</h2>'+plusCardHTML()+
       '<div class="muted ital" style="margin-top:12px;font-size:13px">Billed through your app store. Cancel anytime.</div>';
   }
   openAppSheet(b); }
+
+/* Open the Google Play subscriptions center (deep-links to this app's sub when possible). */
+function manageSubscription(){
+  var pkg="com.thelivingedit.app";
+  var sku=(typeof S!=="undefined" && S.paidSku) ? S.paidSku : "";
+  var url="https://play.google.com/store/account/subscriptions"+(sku?("?sku="+sku+"&package="+pkg):("?package="+pkg));
+  try{ window.open(url,"_blank"); }catch(e){ try{ location.href=url; }catch(e2){} }
+}
 
 function openTerms(){ openAppSheet(
   '<h2 class="serif" style="font-size:25px;margin:0 0 10px">Terms &amp; Conditions</h2>'+
@@ -1535,6 +1546,7 @@ function openPlanChooser(){
 }
 function buyPlan(which){
   var plan=PLANS[which]; if(!plan) return;
+  try{ S.paidSku=plan.id; }catch(e){}
   billingService().then(function(svc){
     if(!svc || typeof PaymentRequest==="undefined"){ if(typeof closeAppSheet==="function") closeAppSheet(); grantPremium(); return; } /* browser/dev fallback */
     try{
