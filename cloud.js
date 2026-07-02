@@ -56,10 +56,9 @@
       if(li.length) S.interests = li;
 
       S.onboarded = S.onboarded || remote.onboarded;
-      /* Membership follows the account: the cloud record is authoritative on sign-in. */
-      if(typeof remote.premium !== "undefined"){ S.premium = !!remote.premium; }
-      else if(remote.unlocked){ S.premium = true; }   /* migrate older records that only had 'unlocked' */
-      S.unlocked = !!S.premium;
+      /* Model A: never lock via sync. If the account has a record of premium, restore it
+         (handy across reinstall); Google Play remains the source of truth for the device. */
+      if(remote.premium || remote.unlocked){ S.premium = true; S.unlocked = true; }
     }catch(e){}
   }
   function cloudSync(){
@@ -131,11 +130,9 @@
     if(!sbc) return;
     sbc.auth.signOut().then(function(){
       window.__cloudReady = false;
-      /* membership follows the account -> lock the app on sign out */
-      try{ S.premium=false; S.unlocked=false; if(typeof save==="function") save(); }catch(e){}
-      if(typeof toast==="function") toast("Signed out — sign in to unlock your membership");
+      /* Model A: signing out only ends cloud sync; it does not lock the app. */
+      if(typeof toast==="function") toast("Signed out of sync");
       if(typeof closeAppSheet==="function") closeAppSheet();
-      try{ if(typeof setTab==="function") setTab(0); }catch(e){}
     });
   };
   window.cloudSync = cloudSync;

@@ -1583,7 +1583,6 @@ function grantPremium(){
   try{ if(window.__cloudReady && typeof cloudPush==="function") cloudPush(); }catch(e){}  /* attach membership to the signed-in account */
   try{ding("pop");}catch(e){}
   toast("Welcome to The Living EDIT+ ✦");
-  if(!window.__cloudReady){ setTimeout(function(){ try{ toast("Sign in to keep your membership on all your devices"); if(typeof openAccount==="function") openAccount(); }catch(e){} }, 1500); }
   setTab(typeof tab!=="undefined"?tab:0);
 }
 /* Reconcile Google Play with the account. Called after sign-in/sync (see cloud.js).
@@ -1605,3 +1604,5 @@ function checkBillingEntitlement(){
     }).catch(function(){});
   });
 }
+/* Model A: entitlement is the device's Google Play purchase — check it on every launch. */
+try{ checkBillingEntitlement(); }catch(e){}
