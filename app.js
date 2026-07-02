@@ -1514,8 +1514,8 @@ try{ applyTimeTheme(); setInterval(applyTimeTheme, 300000); }catch(e){}
 /* ===== Billing: Google Play (Digital Goods API) with browser fallback ===== */
 var PLAY_BILLING="https://play.google.com/billing";
 var PLANS={
-  yearly:{ id:"living_edit_plus_yearly", label:"Yearly" },
-  monthly:{ id:"living_edit_plus_monthly", label:"Monthly" }
+  yearly:{ id:"livingedityearly", label:"Yearly" },
+  monthly:{ id:"livingeditmonthly", label:"Monthly" }
 };
 function billingService(){
   return new Promise(function(resolve){
