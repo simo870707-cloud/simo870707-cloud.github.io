@@ -572,7 +572,7 @@ function renderAlmanac(){
     <div class="card quiet"><span class="frame"></span>
       <div class="muted ital" style="text-align:center;margin:2px 10px 2px">${esc(AFFIRMATIONS[n%AFFIRMATIONS.length])}</div>
       <div class="breath-circle" id="breathCircle"><svg class="breath-ring" viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="46"></circle><circle class="fg" id="breathRing" cx="50" cy="50" r="46"></circle></svg><div class="breath-photo"></div><span class="breath-label" id="breathText">Breathe</span></div>
-      <div class="center"><button class="btn ghost sm" id="breathBtn" onclick="toggleBreath()">Begin a minute</button> <button class="btn ghost sm" id="soundBtn" onclick="toggleBreathSound()">Rain: on</button></div>
+      <div class="center"><button class="btn ghost sm" id="breathBtn" onclick="toggleBreath()">Begin a minute</button> <button class="btn ghost sm" id="soundBtn" onclick="toggleBreathSound()">Birdsong: on</button></div>
     </div>
 
     <div class="section-h"><h2>🧩 Mystery of the Day</h2></div>
@@ -770,7 +770,11 @@ function setTab(n){ try{setLoc(tabName(n));}catch(e){} try{setBotnav(n);}catch(e
 }
 applyA11y();
 checkReminders();
-if('serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js').catch(()=>{});}catch(e){}}
+if('serviceWorker' in navigator){try{
+  navigator.serviceWorker.register('sw.js').then(function(reg){ try{ reg.update(); }catch(e){} }).catch(()=>{});
+  var _swRefreshing=false;
+  navigator.serviceWorker.addEventListener('controllerchange', function(){ if(_swRefreshing) return; _swRefreshing=true; try{ location.reload(); }catch(e){} });
+}catch(e){}}
 
 (function(){
   function applyDayNight(){var night=(typeof nightWanted==="function")?nightWanted():((new Date().getHours()>=18)||(new Date().getHours()<6));
@@ -1299,6 +1303,7 @@ function obToggle(el,t){ if(obPick[t]){delete obPick[t];el.classList.remove("on"
 function obFinish(){ S.interests=Object.keys(obPick); S.onboarded=true; save(); try{ding("pop");}catch(e){} setTab(0); }
 
 /* ===== Burger menu: location label + Settings / Billing / Terms ===== */
+var BUILD="16";
 var curLoc="Today";
 function setLoc(name){ curLoc=name||"Home"; var el=document.getElementById("menuLoc"); if(el) el.textContent=curLoc; }
 function tabName(n){ return n===1?"Mind & Soul":n===2?"Organizer":n===3?"Modern House Digest":n===4?"How-To":n===5?"Saved and Organised":"Today"; }
@@ -1322,9 +1327,8 @@ function openSettings(){ var cur=(typeof S!=="undefined" && S && S.theme)||"auto
     '<button class="btn ghost" onclick="closeAppSheet();openAccount();">Sign in &amp; sync</button>'+
     '<button class="btn ghost" onclick="closeAppSheet();curioReminder();">Daily reminder</button>'+
     '<button class="btn ghost" onclick="closeAppSheet();openA11y();">Accessibility</button>'+
-
-
-  '</div>');
+  '</div>'+
+  '<div class="muted ital" style="font-size:11px;text-align:center;margin-top:16px;opacity:.55">The Living EDIT · build '+BUILD+'</div>');
   try{ updateAcctRow(); }catch(e){}
 }
 /* Fill the Settings account-status line: signed in (with Sign out) or not (with Sign in). */
@@ -1492,21 +1496,37 @@ function breathTick(){
 function breathRing(o){ var r=document.getElementById("breathRing"); if(r) r.style.strokeDashoffset=o; }
 
 
-/* ===== Rain ambience (synth, no asset) ===== */
-var rainSrc=null, rainGain=null, breathSound=true;
-function startRain(){ try{ actx=actx||new(window.AudioContext||window.webkitAudioContext)(); if(rainSrc) return;
+/* ===== Nature ambience: soft breeze bed + gentle birdsong (synth, no asset) ===== */
+var ambSrc=null, ambGain=null, birdTimer=null, breathSound=true;
+function startRain(){ try{ actx=actx||new(window.AudioContext||window.webkitAudioContext)(); if(ambSrc) return;
+  /* soft warm breeze — quieter and lower than the old rain */
   var n=2*actx.sampleRate, buf=actx.createBuffer(1,n,actx.sampleRate), d=buf.getChannelData(0), last=0;
-  for(var i=0;i<n;i++){ var w=Math.random()*2-1; last=(last+0.02*w)/1.02; d[i]=last*3.4; }
+  for(var i=0;i<n;i++){ var w=Math.random()*2-1; last=(last+0.015*w)/1.015; d[i]=last*2.4; }
   var src=actx.createBufferSource(); src.buffer=buf; src.loop=true;
-  var lp=actx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=1100;
-  var hp=actx.createBiquadFilter(); hp.type="highpass"; hp.frequency.value=420;
-  rainGain=actx.createGain(); rainGain.gain.value=0.0001;
-  src.connect(hp); hp.connect(lp); lp.connect(rainGain); rainGain.connect(actx.destination); src.start(0);
-  rainGain.gain.exponentialRampToValueAtTime(0.10, actx.currentTime+1.6); rainSrc=src;
+  var lp=actx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=680;
+  ambGain=actx.createGain(); ambGain.gain.value=0.0001;
+  src.connect(lp); lp.connect(ambGain); ambGain.connect(actx.destination); src.start(0);
+  ambGain.gain.exponentialRampToValueAtTime(0.05, actx.currentTime+2.0); ambSrc=src;
+  scheduleBird();
 }catch(e){} }
-function stopRain(){ try{ if(rainGain&&actx){ rainGain.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+0.7); }
-  var sx=rainSrc; rainSrc=null; rainGain=null; if(sx) setTimeout(function(){ try{sx.stop();}catch(e){} },800); }catch(e){} }
-function toggleBreathSound(){ breathSound=!breathSound; var b=document.getElementById("soundBtn"); if(b)b.textContent="Rain: "+(breathSound?"on":"off");
+function birdChirp(){ try{ if(!actx||!ambSrc) return; var t=actx.currentTime;
+  var notes=1+Math.floor(Math.random()*3), base=1900+Math.random()*1500;   /* a short 1–3 note trill */
+  for(var k=0;k<notes;k++){ var o=actx.createOscillator(); o.type="sine"; var g=actx.createGain();
+    var f=base*(0.96+Math.random()*0.12), st=t+k*(0.10+Math.random()*0.05);
+    o.frequency.setValueAtTime(f*0.82, st);
+    o.frequency.exponentialRampToValueAtTime(f*1.28, st+0.045);
+    o.frequency.exponentialRampToValueAtTime(f*0.98, st+0.13);
+    g.gain.setValueAtTime(0.0001, st);
+    g.gain.exponentialRampToValueAtTime(0.05, st+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, st+0.17);
+    o.connect(g); g.connect(actx.destination); o.start(st); o.stop(st+0.22); }
+}catch(e){} }
+function scheduleBird(){ if(!ambSrc) return; var delay=1600+Math.random()*4200;   /* every ~1.6–5.8s */
+  birdTimer=setTimeout(function(){ if(!ambSrc) return; if(Math.random()<0.85) birdChirp(); scheduleBird(); }, delay); }
+function stopRain(){ try{ if(birdTimer){ clearTimeout(birdTimer); birdTimer=null; }
+  if(ambGain&&actx){ ambGain.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+0.9); }
+  var sx=ambSrc; ambSrc=null; ambGain=null; if(sx) setTimeout(function(){ try{sx.stop();}catch(e){} },1000); }catch(e){} }
+function toggleBreathSound(){ breathSound=!breathSound; var b=document.getElementById("soundBtn"); if(b)b.textContent="Birdsong: "+(breathSound?"on":"off");
   if(typeof breathOn!=="undefined"&&breathOn){ if(breathSound) startRain(); else stopRain(); } }
 
 /* ===== Adaptive background by time of day ===== */

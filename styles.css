@@ -785,3 +785,15 @@ body.night .btn.ghost{ color:#EDE6D6 !important; }
 /* ---- Surprise-tip highlight ---- */
 .surprise-glow{ box-shadow:0 0 0 2px var(--gold), 0 10px 28px rgba(183,144,90,.35) !important; border-radius:14px; transition:box-shadow .35s ease; }
 body.night .surprise-glow{ box-shadow:0 0 0 2px #C7AE7C, 0 10px 28px rgba(0,0,0,.5) !important; }
+
+/* ===== A Quiet Minute — gold → burnt-orange breathing circle ===== */
+.breath-photo::before{
+  background:
+    radial-gradient(circle at 34% 28%, rgba(240,205,130,.95), transparent 58%),
+    radial-gradient(circle at 70% 74%, rgba(176,92,38,.92), transparent 60%),
+    radial-gradient(circle at 50% 50%, #E7B667, #B4622A) !important;
+}
+.breath-ring .fg{ stroke:#C87A38 !important; }
+.breath-ring .bg{ stroke:rgba(200,122,56,.20) !important; }
+.breath-label{ color:#3E2C18 !important; }
+body.night .breath-label{ color:#3E2C18 !important; }
