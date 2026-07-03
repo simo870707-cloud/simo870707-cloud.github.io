@@ -1303,7 +1303,7 @@ function obToggle(el,t){ if(obPick[t]){delete obPick[t];el.classList.remove("on"
 function obFinish(){ S.interests=Object.keys(obPick); S.onboarded=true; save(); try{ding("pop");}catch(e){} setTab(0); }
 
 /* ===== Burger menu: location label + Settings / Billing / Terms ===== */
-var BUILD="16";
+var BUILD="17";
 var curLoc="Today";
 function setLoc(name){ curLoc=name||"Home"; var el=document.getElementById("menuLoc"); if(el) el.textContent=curLoc; }
 function tabName(n){ return n===1?"Mind & Soul":n===2?"Organizer":n===3?"Modern House Digest":n===4?"How-To":n===5?"Saved and Organised":"Today"; }
@@ -1496,21 +1496,40 @@ function breathTick(){
 function breathRing(o){ var r=document.getElementById("breathRing"); if(r) r.style.strokeDashoffset=o; }
 
 
-/* ===== Nature ambience: soft breeze bed + gentle birdsong (synth, no asset) ===== */
+/* ===== Nature ambience: prefer a recorded birdsong loop, fall back to synth ===== */
 var ambSrc=null, ambGain=null, birdTimer=null, breathSound=true;
-function startRain(){ try{ actx=actx||new(window.AudioContext||window.webkitAudioContext)(); if(ambSrc) return;
-  /* soft warm breeze — quieter and lower than the old rain */
+var birdAudio=null, birdFadeT=null, birdUsingFile=false;
+
+function fadeAudio(a,to,ms){ if(!a) return; if(birdFadeT){ clearInterval(birdFadeT); birdFadeT=null; }
+  var from=a.volume||0, steps=24, i=0; birdFadeT=setInterval(function(){ i++;
+    try{ a.volume=Math.max(0,Math.min(1, from+(to-from)*(i/steps))); }catch(e){}
+    if(i>=steps){ clearInterval(birdFadeT); birdFadeT=null; if(to<=0){ try{a.pause();}catch(e){} } }
+  }, Math.max(20, ms/24)); }
+
+/* Entry points used by the breathing feature */
+function startRain(){ if(!breathSound) return;
+  try{
+    if(!birdAudio){ birdAudio=new Audio("birdsong.mp3?v=1"); birdAudio.loop=true; birdAudio.preload="auto"; }
+    birdAudio.volume=0;
+    var p=birdAudio.play();
+    if(p && p.then){ p.then(function(){ birdUsingFile=true; fadeAudio(birdAudio,0.55,1500); }).catch(function(){ birdUsingFile=false; startSynthAmb(); }); }
+    else { birdUsingFile=true; fadeAudio(birdAudio,0.55,1500); }
+  }catch(e){ birdUsingFile=false; startSynthAmb(); }
+}
+function stopRain(){ try{ if(birdAudio && birdUsingFile){ fadeAudio(birdAudio,0,800); } }catch(e){} stopSynthAmb(); }
+
+/* --- synthesized fallback: soft breeze + gentle chirps (used offline / if no file) --- */
+function startSynthAmb(){ try{ actx=actx||new(window.AudioContext||window.webkitAudioContext)(); if(ambSrc) return;
   var n=2*actx.sampleRate, buf=actx.createBuffer(1,n,actx.sampleRate), d=buf.getChannelData(0), last=0;
   for(var i=0;i<n;i++){ var w=Math.random()*2-1; last=(last+0.015*w)/1.015; d[i]=last*2.4; }
   var src=actx.createBufferSource(); src.buffer=buf; src.loop=true;
   var lp=actx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=680;
   ambGain=actx.createGain(); ambGain.gain.value=0.0001;
   src.connect(lp); lp.connect(ambGain); ambGain.connect(actx.destination); src.start(0);
-  ambGain.gain.exponentialRampToValueAtTime(0.05, actx.currentTime+2.0); ambSrc=src;
-  scheduleBird();
+  ambGain.gain.exponentialRampToValueAtTime(0.05, actx.currentTime+2.0); ambSrc=src; scheduleBird();
 }catch(e){} }
 function birdChirp(){ try{ if(!actx||!ambSrc) return; var t=actx.currentTime;
-  var notes=1+Math.floor(Math.random()*3), base=1900+Math.random()*1500;   /* a short 1–3 note trill */
+  var notes=1+Math.floor(Math.random()*3), base=1900+Math.random()*1500;
   for(var k=0;k<notes;k++){ var o=actx.createOscillator(); o.type="sine"; var g=actx.createGain();
     var f=base*(0.96+Math.random()*0.12), st=t+k*(0.10+Math.random()*0.05);
     o.frequency.setValueAtTime(f*0.82, st);
@@ -1521,11 +1540,12 @@ function birdChirp(){ try{ if(!actx||!ambSrc) return; var t=actx.currentTime;
     g.gain.exponentialRampToValueAtTime(0.0001, st+0.17);
     o.connect(g); g.connect(actx.destination); o.start(st); o.stop(st+0.22); }
 }catch(e){} }
-function scheduleBird(){ if(!ambSrc) return; var delay=1600+Math.random()*4200;   /* every ~1.6–5.8s */
+function scheduleBird(){ if(!ambSrc) return; var delay=1600+Math.random()*4200;
   birdTimer=setTimeout(function(){ if(!ambSrc) return; if(Math.random()<0.85) birdChirp(); scheduleBird(); }, delay); }
-function stopRain(){ try{ if(birdTimer){ clearTimeout(birdTimer); birdTimer=null; }
+function stopSynthAmb(){ try{ if(birdTimer){ clearTimeout(birdTimer); birdTimer=null; }
   if(ambGain&&actx){ ambGain.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+0.9); }
   var sx=ambSrc; ambSrc=null; ambGain=null; if(sx) setTimeout(function(){ try{sx.stop();}catch(e){} },1000); }catch(e){} }
+
 function toggleBreathSound(){ breathSound=!breathSound; var b=document.getElementById("soundBtn"); if(b)b.textContent="Birdsong: "+(breathSound?"on":"off");
   if(typeof breathOn!=="undefined"&&breathOn){ if(breathSound) startRain(); else stopRain(); } }
 
