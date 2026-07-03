@@ -897,7 +897,7 @@ if('serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js').c
   window.nestToggle=function(id){var e=document.getElementById(id);if(e)e.classList.toggle('open');};
   window.nestSaveToggle=function(el){var on=el.classList.toggle('on');el.textContent=on?'♥':'♡';};
   window.nestJump=function(i){var e=document.getElementById('nsec'+i);if(e)e.scrollIntoView({behavior:'smooth',block:'start'});};
-  window.nestSurprise=function(){var t=document.querySelectorAll('.nest .ntile');if(!t.length)return;var p=t[Math.floor(Math.random()*t.length)];p.scrollIntoView({behavior:'smooth',block:'center'});p.style.animation='none';void p.offsetWidth;p.style.animation='nestPop .6s';try{if(window.ding)ding('pop');}catch(e){}};
+  window.nestSurprise=function(){var t=document.querySelectorAll('.nest .ntile');if(!t.length)return;var p=t[Math.floor(Math.random()*t.length)];p.scrollIntoView({behavior:'smooth',block:'center'});p.classList.remove('surprise-glow');void p.offsetWidth;p.classList.add('surprise-glow');p.style.animation='none';void p.offsetWidth;p.style.animation='nestPop .6s';setTimeout(function(){ if(p) p.classList.remove('surprise-glow'); },1900);try{if(window.ding)ding('pop');}catch(e){}try{ if(typeof toast==='function') toast('✨ A tip for you'); }catch(e){}};
   window.nestDailyTip=function(nn){
     var all=[]; NEST.forEach(function(sec){ (sec.topics||[]).forEach(function(t){ all.push({t:t,s:sec}); }); }); if(!all.length) return null;
     try{ var MAP={ "Cleaning & Care":["Cleaning"], "Organising":["Organization"], "Plants & Garden":["Garden"], "Home & Decor":["DIY Projects","Household Management"], "Cooking":["Sustainable Home"] };

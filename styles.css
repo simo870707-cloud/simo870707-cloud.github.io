@@ -740,3 +740,48 @@ body.night .card .frame{ opacity:.3 !important; }
 body.night .chip, body.night .nchip, body.night .ntile, body.night .calbtn, body.night .iconbtn{
   background:#22242E !important; border-color:rgba(199,174,124,.26) !important; color:#ECE4D4 !important; }
 body.night .chip .nm, body.night .nchip *, body.night .ntile *{ color:#ECE4D4 !important; }
+
+/* ============ Night mode v2: lighter backdrop + full readability ============ */
+
+/* Lighten the very-dark night backdrop a touch */
+body.night::before{ background:linear-gradient(180deg,#1c2231 0%,#151a26 100%) !important; }
+
+/* Surfaces a touch lighter, for clearer contrast with text */
+body.night .card, body.night .notecard, body.night .plus, body.night .tool,
+body.night .note-paper, body.night .sheet-card, body.night .choose-tile,
+body.night .chip, body.night .nchip, body.night .ntile, body.night .calbtn, body.night .iconbtn{
+  background:#262b38 !important; border-color:rgba(199,174,124,.28) !important; color:#EAE3D4 !important; }
+body.night .nav, body.night #menu, body.night .botnav{ background:#1e222e !important; }
+
+/* Safety net: default ALL text to a light tone in dark mode (accent rules below still win) */
+body.night, body.night p, body.night span, body.night div, body.night li,
+body.night h1, body.night h2, body.night h3, body.night h4, body.night h5,
+body.night small, body.night label, body.night strong, body.night b, body.night em,
+body.night td, body.night th, body.night dt, body.night dd{ color:#EAE3D4; }
+
+/* Menu drawer text */
+body.night .menu-loc, body.night .menu-loc-k{ color:#BCC2C6 !important; }
+body.night #menuLoc{ color:#F3ECDC !important; }
+
+/* Language switcher (inline-styled label + buttons) */
+body.night #langSwitch > div{ color:#BCC2C6 !important; }
+body.night #langSwitch button{ color:#EDE6D6 !important; border-color:rgba(199,174,124,.32) !important; background:transparent !important; }
+
+/* Bottom nav labels */
+body.night .botnav-item{ color:#C3C9CE !important; }
+body.night .botnav-item.on{ color:var(--gold) !important; }
+
+/* Keep gold accents (override the safety net) */
+body.night .label, body.night .kicker, body.night .masthead .kicker, body.night .menu-h,
+body.night .fact .label, body.night .orn{ color:var(--gold) !important; }
+
+/* Light input fields keep dark, readable text */
+body.night input, body.night textarea, body.night select{ color:#26272C !important; background:#FCF9F1 !important; }
+
+/* Gold/solid buttons keep a dark label; ghost buttons stay light */
+body.night .btn.home-explore, body.night .btn:not(.ghost){ color:#20222B !important; }
+body.night .btn.ghost{ color:#EDE6D6 !important; }
+
+/* ---- Surprise-tip highlight ---- */
+.surprise-glow{ box-shadow:0 0 0 2px var(--gold), 0 10px 28px rgba(183,144,90,.35) !important; border-radius:14px; transition:box-shadow .35s ease; }
+body.night .surprise-glow{ box-shadow:0 0 0 2px #C7AE7C, 0 10px 28px rgba(0,0,0,.5) !important; }
