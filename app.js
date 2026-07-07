@@ -453,7 +453,7 @@ function renderHome(){
   return `<div class="panel">
     ${isBday?`<div class="bdaybanner">🎂 Happy birthday${S.name?', '+esc(S.name):''}!<span>Wishing you a year full of discovery.</span><button class="btn sm" style="margin-top:8px" onclick="birthdayFX()">🎉 Celebrate again</button></div>`:""}
 
-    <div class="masthead" style="margin-top:4px"><span class="brand-lockup"><img class="brand-day" src="logo-mark.png?v=8" alt="The Living EDIT — Home & Mind"><img class="brand-night" src="logo-mark-night.png?v=8" alt="The Living EDIT — Home & Mind"></span><div class="app-hero">Things to learn, things to test, and things to love.</div></div>
+    <div class="masthead" style="margin-top:4px"><span class="brand-lockup" onclick="brandTap()"><img class="brand-day" src="logo-mark.png?v=8" alt="The Living EDIT — Home & Mind"><img class="brand-night" src="logo-mark-night.png?v=8" alt="The Living EDIT — Home & Mind"></span><div class="app-hero">Things to learn, things to test, and things to love.</div></div>
 
     <div class="ribbon" style="margin-top:10px"><b>${esc(dateLong)}</b> · Day ${n} of ${d.getFullYear()} · Week ${isoWeek(d)} · ${season(d)} · ${mp.emoji} ${esc(mp.name)}</div>
 
@@ -1303,7 +1303,7 @@ function obToggle(el,t){ if(obPick[t]){delete obPick[t];el.classList.remove("on"
 function obFinish(){ S.interests=Object.keys(obPick); S.onboarded=true; save(); try{ding("pop");}catch(e){} setTab(0); }
 
 /* ===== Burger menu: location label + Settings / Billing / Terms ===== */
-var BUILD="17";
+var BUILD="18";
 var curLoc="Today";
 function setLoc(name){ curLoc=name||"Home"; var el=document.getElementById("menuLoc"); if(el) el.textContent=curLoc; }
 function tabName(n){ return n===1?"Mind & Soul":n===2?"Organizer":n===3?"Modern House Digest":n===4?"How-To":n===5?"Saved and Organised":"Today"; }
@@ -1625,10 +1625,21 @@ function grantPremium(){
   toast("Welcome to The Living EDIT+ ✦");
   setTab(typeof tab!=="undefined"?tab:0);
 }
+/* ===== Owner "god mode" — secret unlock for the developer (tap the logo 7×) ===== */
+var _brandTaps=0, _brandTapT=0;
+function brandTap(){ var now=Date.now(); if(now-_brandTapT>2500) _brandTaps=0; _brandTapT=now; _brandTaps++;
+  if(_brandTaps>=7){ _brandTaps=0; toggleGodMode(); } }
+function toggleGodMode(){ S.godmode=!S.godmode; if(S.godmode){ S.premium=true; S.unlocked=true; }
+  save(); try{ if(window.__cloudReady && typeof cloudPush==="function") cloudPush(); }catch(e){}
+  try{ding("pop");}catch(e){}
+  toast(S.godmode?"✦ God mode ON — full access, no charge":"God mode off");
+  setTab(typeof tab!=="undefined"?tab:0); }
+
 /* Reconcile Google Play with the account. Called after sign-in/sync (see cloud.js).
    Membership follows the email account; Google Play is used to grant it and to
    revoke it on the device that actually owns the subscription. */
 function checkBillingEntitlement(){
+  if(typeof S!=="undefined" && S && S.godmode){ if(!S.unlocked||!S.premium){ S.premium=true; S.unlocked=true; save(); } return; }  /* god mode never gets revoked */
   billingService().then(function(svc){
     if(!svc || !svc.listPurchases) return;                 /* can't verify (browser/offline) -> leave state as-is */
     svc.listPurchases().then(function(purchases){
