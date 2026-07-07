@@ -52,14 +52,14 @@
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Today's page — the daily curiosity, on this day in history, and the sky tonight"
+      "label": "Today's page — the daily discovery, on this day in history, and the sky tonight"
     },
     {
       "src": "/screenshot-narrow-2.png",
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Your almanach — reminders and saved curiosities in one calm place"
+      "label": "Your almanach — reminders and saved discoveries in one calm place"
     },
     {
       "src": "/screenshot-wide-1.png",

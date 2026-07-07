@@ -1,4 +1,4 @@
-/* CuriO — The Daybook service worker.
+/* The Living EDIT service worker.
  * Goals: (1) work offline, (2) keep the "push to GitHub Pages = instantly live"
  * property, (3) require zero build step.
  *
@@ -12,7 +12,7 @@
  *
  * Bump CACHE_VERSION whenever the precached shell changes.
  */
-const CACHE_VERSION = "tle-v20";
+const CACHE_VERSION = "tle-v21";
 const CACHE = CACHE_VERSION;
 
 // Core app shell — cached on install so the app boots offline.
@@ -98,13 +98,13 @@ self.addEventListener("fetch", (event) => {
 
 // Show the daily reminder notification when periodic background sync fires.
 self.addEventListener("periodicsync", (event) => {
-  if (event.tag === "curio-daily") {
+  if (event.tag === "le-daily") {
     event.waitUntil(
-      self.registration.showNotification("CuriO — The Daybook", {
+      self.registration.showNotification("The Living EDIT", {
         body: "Today's wonder is ready. ✦",
         icon: "icon-192.png?v=4",
         badge: "favicon-32.png?v=4",
-        tag: "curio-daily",
+        tag: "le-daily",
       })
     );
   }
