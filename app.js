@@ -1303,7 +1303,7 @@ function obToggle(el,t){ if(obPick[t]){delete obPick[t];el.classList.remove("on"
 function obFinish(){ S.interests=Object.keys(obPick); S.onboarded=true; save(); try{ding("pop");}catch(e){} setTab(0); }
 
 /* ===== Burger menu: location label + Settings / Billing / Terms ===== */
-var BUILD="20";
+var BUILD="21";
 var curLoc="Today";
 function setLoc(name){ curLoc=name||"Home"; var el=document.getElementById("menuLoc"); if(el) el.textContent=curLoc; }
 function tabName(n){ return n===1?"Mind & Soul":n===2?"Organizer":n===3?"Modern House Digest":n===4?"How-To":n===5?"Saved and Organised":"Today"; }
@@ -1470,7 +1470,10 @@ function homeTipCardSaveable(tip){ if(!tip) return ""; var text=tip.title+" — 
 
 
 /* Start the app AFTER all modules (nest/howto/home-tip) are defined */
-if(typeof S!=="undefined" && S && S.onboarded){ setTab(0); } else { showOnboarding(); }
+if(typeof S!=="undefined" && S && S.onboarded){
+  var _go=0; try{ var _m=(location.search.match(/[?&]go=([a-z]+)/)||[])[1]; _go=_m==="mind"?1:_m==="saved"?5:_m==="home"?3:0; }catch(e){}
+  if(_go && typeof goTab==="function"){ goTab(_go); } else { setTab(0); }
+} else { showOnboarding(); }
 
 
 /* ===== A Quiet Minute — guided breathing ===== */
