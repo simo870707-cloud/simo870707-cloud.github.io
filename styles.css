@@ -697,6 +697,15 @@ body.night .brand-night{ display:block !important; }
 /* ================= Readable dark theme (night) ================= */
 body.night{ color:#ECE4D4 !important; }
 
+/* Secondary text (card sub-captions, decks, hints) — these set their own
+   color:var(--ink2), so the card's inherited light color never reaches them.
+   Force a bright, high-contrast off-white on the dark surfaces. */
+body.night .fact .deeper, body.night .deeper, body.night .qotd .ans,
+body.night .nest .ntile p, body.night .nest .nsteps li,
+body.night .col-item .cd, body.night .col-item .ct, body.night .remcal-h,
+body.night .a11y-row .hint, body.night .choose-sub, body.night .le-trial-note,
+body.night .bdaybanner span, body.night small.note{ color:#D8D1C2 !important; }
+
 /* Surfaces -> dark charcoal with light text */
 body.night .card, body.night .notecard, body.night .plus, body.night .tool,
 body.night .note-paper, body.night .sheet-card, body.night .choose-tile{
