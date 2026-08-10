@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>1 HOUR — Time can kill</title>
+  <meta name="description" content="1 HOUR: a time-gated, self-destructing horror story app. Each story unlocks, lives for one hour, then is gone forever." />
+  <meta property="og:title" content="1 HOUR — Time can kill" />
+  <meta property="og:description" content="A time-gated, self-destructing horror story app. Read it before the hour passes." />
+  <meta property="og:image" content="hero.png" />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#050608" />
+  <style>
+    :root { --cyan:#8fd6d6; --dim:#5a8a8a; --bg:#050608; }
+    * { box-sizing: border-box; }
+    html,body { margin:0; padding:0; background:var(--bg); color:#e8e8e8;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+    .wrap { min-height:100vh; display:flex; flex-direction:column; align-items:center;
+      justify-content:center; text-align:center; padding:32px 20px 56px; }
+    .art { width:min(78vw,360px); border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,.7);
+      border:1px solid #141a1c; }
+    h1 { font-size:14px; letter-spacing:6px; color:var(--dim); text-transform:uppercase;
+      margin:28px 0 6px; font-weight:600; }
+    p.tag { font-size:22px; color:var(--cyan); margin:0 0 28px; letter-spacing:1px; }
+    .btn { display:inline-block; text-decoration:none; background:#c33; color:#fff;
+      font-size:18px; font-weight:800; padding:16px 34px; border-radius:12px;
+      box-shadow:0 8px 26px rgba(204,51,51,.35); transition:transform .1s ease; }
+    .btn:active { transform:scale(.97); }
+    .steps { margin-top:26px; max-width:420px; color:#9aa; font-size:14px; line-height:1.7;
+      text-align:left; background:#0c1013; border:1px solid #161c1f; border-radius:12px; padding:16px 18px; }
+    .steps b { color:#cfe; }
+    .note { margin-top:22px; color:#556; font-size:12px; max-width:420px; line-height:1.6; }
+    a.link { color:var(--dim); }
+    .platform { margin-top:10px; font-size:12px; color:#556; letter-spacing:2px; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <img class="art" src="hero.png" alt="1 HOUR — Time can kill" />
+    <h1>1 HOUR</h1>
+    <p class="tag">Time can kill</p>
+
+    <!-- Update this href whenever you produce a new build. -->
+    <a id="install" class="btn"
+       href="https://expo.dev/accounts/simonans-team/projects/one-hour-app/builds/5b1936de-9005-4664-9bb9-bbaff3df0dc9">
+      Install on Android
+    </a>
+    <div class="platform">ANDROID · APK · v1.0.0</div>
+
+    <div class="steps">
+      <b>How to install</b><br />
+      1. Tap <b>Install on Android</b> above (on your phone).<br />
+      2. On the page that opens, tap <b>Install</b> or scan the QR.<br />
+      3. Open the downloaded file. If Android warns about an unknown source,
+         tap <b>Settings → allow</b>, then <b>Install</b>.<br />
+      4. Open <b>The Hour</b> and read before the hour passes.
+    </div>
+
+    <p class="note">
+      A story unlocks, lives for one hour, then self-destructs for everyone —
+      no screenshots outrun the clock. iPhone build coming later.
+    </p>
+  </main>
+</body>
+</html>
