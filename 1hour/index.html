@@ -26,7 +26,22 @@
       text-transform:uppercase; margin:30px 0 10px; font-weight:500; }
     p.tag { font-family:"Cinzel",serif; font-weight:700; font-size:26px; color:var(--cyan);
       margin:0 0 14px; letter-spacing:3px; text-transform:uppercase;
-      text-shadow:0 0 18px rgba(143,214,214,.35), 0 0 2px rgba(143,214,214,.5); }
+      text-shadow:0 0 18px rgba(143,214,214,.35), 0 0 2px rgba(143,214,214,.5);
+      animation:flicker 7s linear infinite; }
+    @keyframes flicker {
+      0%,100%   { opacity:1;   text-shadow:0 0 18px rgba(143,214,214,.35), 0 0 2px rgba(143,214,214,.5); }
+      8%        { opacity:.35; text-shadow:none; }
+      9%        { opacity:1;   text-shadow:0 0 18px rgba(143,214,214,.35), 0 0 2px rgba(143,214,214,.5); }
+      9.6%      { opacity:.5;  text-shadow:none; }
+      10%       { opacity:1; }
+      42%       { opacity:1; }
+      43%       { opacity:.2;  text-shadow:none; }
+      43.6%     { opacity:1; }
+      70%       { opacity:1; }
+      70.5%     { opacity:.55; text-shadow:0 0 6px rgba(143,214,214,.2); }
+      71%       { opacity:1; }
+    }
+    @media (prefers-reduced-motion: reduce) { p.tag { animation:none; } }
     p.sub { font-family:"EB Garamond",Georgia,serif; font-style:italic; font-size:18px;
       color:#a9c4c4; margin:0 0 30px; max-width:360px; line-height:1.65; letter-spacing:.3px; }
     p.sub .em { color:var(--cyan); font-style:normal; }
@@ -40,6 +55,9 @@
     .note { margin-top:22px; color:#556; font-size:12px; max-width:420px; line-height:1.6; }
     a.link { color:var(--dim); }
     .platform { margin-top:10px; font-size:12px; color:#556; letter-spacing:2px; }
+    .reassure { margin:14px auto 0; max-width:360px; font-size:12.5px; line-height:1.55;
+      color:#8a9a9a; background:#0c1013; border:1px solid #182022; border-radius:10px; padding:10px 14px; }
+    .reassure b { color:var(--cyan); }
   </style>
 </head>
 <body>
@@ -56,13 +74,19 @@
     </a>
     <div class="platform">ANDROID · APK · v1.0.0</div>
 
+    <p class="reassure">
+      Android flags every app installed outside the Play Store.
+      The “file might be harmful” prompt is expected — tap <b>Download anyway</b>.
+    </p>
+
     <div class="steps">
       <b>How to install</b><br />
       1. Tap <b>Install on Android</b> above (on your phone).<br />
-      2. On the page that opens, tap <b>Install</b> or scan the QR.<br />
+      2. Chrome may say <i>“file might be harmful”</i> — this is normal for apps
+         outside the Play Store. Tap <b>Download anyway</b>.<br />
       3. Open the downloaded file. If Android warns about an unknown source,
-         tap <b>Settings → allow</b>, then <b>Install</b>.<br />
-      4. Open <b>The Hour</b> and read before the hour passes.
+         tap <b>Settings → allow from this source</b>, then <b>Install</b>.<br />
+      4. Open <b>1&nbsp;HOUR</b> and read before the hour passes.
     </div>
 
     <p class="note">
