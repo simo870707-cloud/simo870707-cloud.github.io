@@ -29,7 +29,7 @@
     .clock .val{ color:var(--grn); font-size:clamp(30px,9vw,48px); font-weight:800; letter-spacing:4px; font-variant-numeric:tabular-nums; text-shadow:0 0 18px rgba(57,255,158,.4); }
     .btns{ display:flex; gap:12px; flex-wrap:wrap; margin:18px 0 10px; }
     .btn{ flex:1; min-width:200px; text-align:center; text-decoration:none; font-weight:800; letter-spacing:1px; padding:15px 18px; border-radius:10px; }
-    .btn.and{ background:var(--grn); color:#02120a; }
+    .btn.open{ background:transparent; color:var(--grn); border:1px solid var(--grn); } .btn.and{ background:var(--grn); color:#02120a; }
     .btn.ios{ background:transparent; color:var(--dim); border:1px solid var(--bd); }
     .warn{ color:var(--red); font-size:12px; letter-spacing:1px; margin-top:8px; }
     h2{ font-family:"Cinzel",serif; color:#eafff4; font-size:24px; letter-spacing:1px; margin:0 0 6px; }
@@ -82,10 +82,11 @@
         <div class="val" id="countdown">--:--:--</div>
       </div>
 
-      <div class="btns">
+      <div class="btns"><a class="btn open" href="onehour://">▶ OPEN 1HOUR</a>
         <a class="btn and" href="https://github.com/simo870707-cloud/onehour-releases/releases/download/eclipse-preview/1HOUR-Eclipse.apk">📱 DOWNLOAD ON ANDROID</a>
         <a class="btn ios" href="#" onclick="return false">📲 iOS — COMING SOON</a>
       </div>
+      <p class="warn">Already installed? Tap <b>OPEN 1HOUR</b>. First time? <b>Download</b>.</p>
       <p class="warn">No second chances. No backtracks. If you fail, the evidence wipes forever.</p>
     </section>
 
@@ -158,7 +159,7 @@
     <section class="foot" style="border-bottom:0;">
       <div class="big">CAN YOU DECRYPT THE DARK?</div>
       <p class="lede" style="margin:6px auto 18px;">The next signal drops tonight. Download now and prepare your terminal.</p>
-      <div class="btns">
+      <div class="btns"><a class="btn open" href="onehour://">▶ OPEN 1HOUR</a>
         <a class="btn and" href="https://github.com/simo870707-cloud/onehour-releases/releases/download/eclipse-preview/1HOUR-Eclipse.apk">GET 1HOUR ON GOOGLE PLAY</a>
         <a class="btn ios" href="#" onclick="return false">APP STORE — SOON</a>
       </div>
