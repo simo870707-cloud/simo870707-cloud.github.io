@@ -3,98 +3,188 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>1HOUR — Time can kill</title>
-  <meta name="description" content="1HOUR: a time-gated, self-destructing horror story app. Each story unlocks, lives for one hour, then is gone forever." />
-  <meta property="og:title" content="1HOUR — Time can kill" />
-  <meta property="og:description" content="A time-gated, self-destructing horror story app. Read it before the hour passes." />
+  <title>1HOUR — Decrypt the Dark</title>
+  <meta name="description" content="1HOUR turns your phone into an active crime-scene terminal. One case. One hour. Sixty minutes before the file self-destructs." />
+  <meta property="og:title" content="1HOUR — Decrypt the Dark" />
+  <meta property="og:description" content="Real-time investigations. Corrupt feeds. Hardware puzzles. Solve before the clock hits zero — or the evidence wipes forever." />
   <meta property="og:image" content="hero.png?v=3" />
-  <meta property="og:type" content="website" />
-  <meta name="theme-color" content="#050608" />
+  <meta name="theme-color" content="#04120c" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Cinzel:wght@700&display=swap" rel="stylesheet" />
   <style>
-    :root { --cyan:#8fd6d6; --dim:#5a8a8a; --bg:#050608; }
-    * { box-sizing: border-box; }
-    html,body { margin:0; padding:0; background:var(--bg); color:#e8e8e8;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
-    .wrap { min-height:100vh; display:flex; flex-direction:column; align-items:center;
-      justify-content:center; text-align:center; padding:32px 20px 56px; }
-    .art { width:min(78vw,360px); border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,.7);
-      border:1px solid #141a1c; }
-    h1 { font-family:"Cinzel",serif; font-size:13px; letter-spacing:8px; color:var(--dim);
-      text-transform:uppercase; margin:30px 0 10px; font-weight:500; }
-    p.tag { font-family:"Cinzel",serif; font-weight:700; font-size:26px; color:var(--cyan);
-      margin:0 0 14px; letter-spacing:3px; text-transform:uppercase;
-      text-shadow:0 0 18px rgba(143,214,214,.35), 0 0 2px rgba(143,214,214,.5);
-      animation:flicker 7s linear infinite; }
-    @keyframes flicker {
-      0%,100%   { opacity:1;   text-shadow:0 0 18px rgba(143,214,214,.35), 0 0 2px rgba(143,214,214,.5); }
-      8%        { opacity:.35; text-shadow:none; }
-      9%        { opacity:1;   text-shadow:0 0 18px rgba(143,214,214,.35), 0 0 2px rgba(143,214,214,.5); }
-      9.6%      { opacity:.5;  text-shadow:none; }
-      10%       { opacity:1; }
-      42%       { opacity:1; }
-      43%       { opacity:.2;  text-shadow:none; }
-      43.6%     { opacity:1; }
-      70%       { opacity:1; }
-      70.5%     { opacity:.55; text-shadow:0 0 6px rgba(143,214,214,.2); }
-      71%       { opacity:1; }
-    }
-    @media (prefers-reduced-motion: reduce) { p.tag { animation:none; } }
-    p.sub { font-family:"EB Garamond",Georgia,serif; font-style:italic; font-size:18px;
-      color:#a9c4c4; margin:0 0 30px; max-width:360px; line-height:1.65; letter-spacing:.3px; }
-    p.sub .em { color:var(--cyan); font-style:normal; }
-    .btn { display:inline-block; text-decoration:none; background:#c33; color:#fff;
-      font-size:18px; font-weight:800; padding:16px 34px; border-radius:12px;
-      box-shadow:0 8px 26px rgba(204,51,51,.35); transition:transform .1s ease; }
-    .btn:active { transform:scale(.97); }
-    .steps { margin-top:26px; max-width:420px; color:#9aa; font-size:14px; line-height:1.7;
-      text-align:left; background:#0c1013; border:1px solid #161c1f; border-radius:12px; padding:16px 18px; }
-    .steps b { color:#cfe; }
-    .note { margin-top:22px; color:#556; font-size:12px; max-width:420px; line-height:1.6; }
-    a.link { color:var(--dim); }
-    .platform { margin-top:10px; font-size:12px; color:#556; letter-spacing:2px; }
-    .reassure { margin:14px auto 0; max-width:360px; font-size:12.5px; line-height:1.55;
-      color:#8a9a9a; background:#0c1013; border:1px solid #182022; border-radius:10px; padding:10px 14px; }
-    .reassure b { color:var(--cyan); }
+    :root{ --grn:#39ff9e; --red:#ff3b47; --bg:#04120c; --panel:#08160f; --bd:#12402c; --dim:#4f8a68; --txt:#c8f7dc; }
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; background:var(--bg); color:var(--txt); font-family:"JetBrains Mono",ui-monospace,monospace; -webkit-font-smoothing:antialiased; }
+    body::before{ content:""; position:fixed; inset:0; pointer-events:none; z-index:2;
+      background:repeating-linear-gradient(0deg, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,.14) 3px); mix-blend-mode:multiply; }
+    .wrap{ max-width:820px; margin:0 auto; padding:0 20px; position:relative; z-index:1; }
+    section{ padding:56px 0; border-bottom:1px solid #0d2c1f; }
+    .tag{ color:var(--grn); font-size:11px; letter-spacing:4px; border:1px solid var(--bd); display:inline-block; padding:5px 10px; }
+    h1{ font-family:"Cinzel",serif; font-size:clamp(40px,10vw,76px); margin:18px 0 6px; letter-spacing:2px; color:#eafff4;
+      text-shadow:0 0 24px rgba(57,255,158,.25); }
+    .sub{ color:var(--grn); font-size:clamp(14px,3.4vw,19px); font-weight:700; letter-spacing:1px; }
+    .lede{ color:#9ec9b4; font-size:15px; line-height:1.7; margin:18px 0; max-width:620px; }
+    .clock{ border:1px solid var(--bd); background:#050d0a; border-radius:10px; padding:16px; text-align:center; margin:22px 0; }
+    .clock .lbl{ color:var(--dim); font-size:11px; letter-spacing:3px; }
+    .clock .val{ color:var(--grn); font-size:clamp(30px,9vw,48px); font-weight:800; letter-spacing:4px; font-variant-numeric:tabular-nums; text-shadow:0 0 18px rgba(57,255,158,.4); }
+    .btns{ display:flex; gap:12px; flex-wrap:wrap; margin:18px 0 10px; }
+    .btn{ flex:1; min-width:200px; text-align:center; text-decoration:none; font-weight:800; letter-spacing:1px; padding:15px 18px; border-radius:10px; }
+    .btn.and{ background:var(--grn); color:#02120a; }
+    .btn.ios{ background:transparent; color:var(--dim); border:1px solid var(--bd); }
+    .warn{ color:var(--red); font-size:12px; letter-spacing:1px; margin-top:8px; }
+    h2{ font-family:"Cinzel",serif; color:#eafff4; font-size:24px; letter-spacing:1px; margin:0 0 6px; }
+    h2 .q{ color:var(--dim); display:block; font-family:"JetBrains Mono"; font-size:12px; letter-spacing:3px; font-weight:400; margin-top:4px; }
+    .cycle{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }
+    .step{ border:1px solid var(--bd); background:var(--panel); border-radius:10px; padding:14px; }
+    .step .n{ color:var(--grn); font-weight:800; font-size:12px; letter-spacing:2px; }
+    .step .t{ color:#eafff4; font-weight:700; margin:6px 0 4px; }
+    .step .d{ color:#8bb3a0; font-size:12.5px; line-height:1.6; }
+    .mech{ border:1px solid var(--bd); border-radius:10px; margin-top:16px; overflow:hidden; }
+    .mrow{ padding:16px; border-bottom:1px solid #0d2c1f; }
+    .mrow:last-child{ border-bottom:0; }
+    .mrow .mt{ color:var(--grn); font-weight:800; letter-spacing:1px; margin-bottom:6px; }
+    .mrow .md{ color:#9ec9b4; font-size:13.5px; line-height:1.7; }
+    .cases{ display:grid; gap:14px; margin-top:18px; }
+    .case{ border:1px solid var(--bd); background:var(--panel); border-radius:12px; padding:18px; }
+    .case .cid{ color:var(--dim); font-size:11px; letter-spacing:3px; }
+    .case .cn{ color:#eafff4; font-size:20px; font-weight:800; margin:4px 0; }
+    .case.eclipse .cn{ color:var(--grn); }
+    .case.blackout{ border-color:#3a1416; } .case.blackout .cn{ color:var(--red); }
+    .case .quote{ color:#8bb3a0; font-style:italic; font-size:13.5px; line-height:1.6; margin:8px 0; }
+    .case .meta{ color:var(--dim); font-size:12px; }
+    .shift{ border:1px solid var(--bd); background:#050d0a; border-radius:10px; padding:18px; margin-top:16px; }
+    .shift .opt{ display:flex; justify-content:space-between; padding:11px 12px; border:1px solid #0d2c1f; border-radius:8px; margin-bottom:8px; color:#bfe6d3; font-size:13px; }
+    .shift .opt.rec{ border-color:var(--grn); color:var(--grn); }
+    .shift .od{ color:var(--dim); font-size:12px; margin-top:6px; }
+    .stat{ color:var(--red); font-size:clamp(22px,6vw,32px); font-weight:800; letter-spacing:1px; text-align:center; text-shadow:0 0 18px rgba(255,59,71,.3); }
+    .links a{ color:var(--grn); text-decoration:none; }
+    .foot{ text-align:center; }
+    .foot .big{ font-family:"Cinzel",serif; font-size:28px; color:#eafff4; margin-bottom:6px; }
+    .social{ color:var(--dim); font-size:12px; margin-top:16px; letter-spacing:1px; }
+    .copyright{ color:#2f5a45; font-size:11px; margin-top:10px; }
+    @media(max-width:560px){ .cycle{ grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <img class="art" src="hero.png?v=3" alt="1HOUR — Time can kill" />
-    <h1>1HOUR</h1>
-    <p class="tag">Time can kill</p>
-    <p class="sub">One story. <span class="em">One hour.</span> One chance to survive the midnight drop.</p>
+  <div class="wrap">
 
-    <!-- Update this href whenever you produce a new build. -->
-    <a id="install" class="btn"
-       href="https://expo.dev/accounts/simonans-team/projects/one-hour-app/builds/5b1936de-9005-4664-9bb9-bbaff3df0dc9">
-      Install on Android
-    </a>
-    <div class="platform">ANDROID · APK · v1.0.0</div>
+    <!-- 1. HERO -->
+    <section>
+      <span class="tag">CLASSIFIED SYSTEM // DIRECTIVE 01</span>
+      <h1>DECRYPT<br/>THE DARK.</h1>
+      <p class="sub">One Case. One Hour. Sixty Minutes Before the File Self-Destructs.</p>
+      <p class="lede">1HOUR turns your phone into an active crime-scene terminal. Enter real-time
+        investigations, cross-reference corrupt feeds, and solve physical hardware puzzles before
+        the clock hits zero.</p>
 
-    <p class="reassure">
-      Android flags every app installed outside the Play Store.
-      The “file might be harmful” prompt is expected — tap <b>Download anyway</b>.
-    </p>
+      <div class="clock">
+        <div class="lbl">⏱ NEXT GLOBAL DROP IN</div>
+        <div class="val" id="countdown">--:--:--</div>
+      </div>
 
-    <div class="steps">
-      <b>How to install</b><br />
-      1. Tap <b>Install on Android</b> above (on your phone).<br />
-      2. Chrome may say <i>“file might be harmful”</i> — normal for apps
-         outside the Play Store. Tap <b>Download anyway</b>.<br />
-      3. Open the downloaded file. If Android warns about an unknown source,
-         tap <b>Settings → allow from this source</b>, then <b>Install</b>.<br />
-      4. If <b>Play Protect</b> says “blocked to protect your device”, tap
-         <b>More details → Install anyway</b>.<br />
-      5. Open <b>1&nbsp;HOUR</b> and read before the hour passes.
-    </div>
+      <div class="btns">
+        <a class="btn and" href="/play">📱 DOWNLOAD ON ANDROID</a>
+        <a class="btn ios" href="#" onclick="return false">📲 iOS — COMING SOON</a>
+      </div>
+      <p class="warn">No second chances. No backtracks. If you fail, the evidence wipes forever.</p>
+    </section>
 
-    <p class="note">
-      A story unlocks, lives for one hour, then self-destructs for everyone —
-      no screenshots outrun the clock. iPhone build coming later.
-    </p>
-  </main>
+    <!-- 2. CORE EXPERIENCE -->
+    <section>
+      <h2>How 1HOUR Works<span class="q">THE 4-STEP CYCLE</span></h2>
+      <div class="cycle">
+        <div class="step"><div class="n">01 · PRE-DROP</div><div class="t">Lock &amp; Timer</div><div class="d">The app stays sealed all day. A live countdown ticks toward your operational window, building the dread.</div></div>
+        <div class="step"><div class="n">02 · SELECTION</div><div class="t">Shift Window</div><div class="d">Pick a designated 1-hour window that fits your schedule — or break the seal on-demand after sunset.</div></div>
+        <div class="step"><div class="n">03 · THE 60 MIN</div><div class="t">Investigation</div><div class="d">Once activated, you have exactly 60:00 to navigate trapped perspectives, scrub audio, and extract the override keys.</div></div>
+        <div class="step"><div class="n">04 · DEBRIEF</div><div class="t">Share / Dossier</div><div class="d">Solve it to earn a clearance rank and the post-mortem. Fail, and watch the evidence static-wipe at 00:00.</div></div>
+      </div>
+    </section>
+
+    <!-- 3. MECHANICS -->
+    <section>
+      <h2>Your Phone Is the Evidence Locker<span class="q">PUZZLE MECHANICS</span></h2>
+      <div class="mech">
+        <div class="mrow"><div class="mt">DUAL-PERSPECTIVE CRYPTOLOGY</div><div class="md">Flip between field logs (Agent Vance) and system terminal feeds (Subject 0). Overlay crossed-out text from one view onto terminal code in the other — like a physical stencil — to isolate secret keyphrases. Intercepted transmissions tune through EN / 日本語 / 한국어 on the radio signal.</div></div>
+        <div class="mrow"><div class="mt">INSPECT THE SCENE — HARDWARE CONTROL</div><div class="md">Interact directly with the screen. Drag a warm thumb over thermal footage to light up pressed keypads, adjust brightness to spot invisible ink, or turn the phone like a safe dial using tactile haptics.</div></div>
+        <div class="mrow"><div class="mt">DEAD-DROP SIGNALS</div><div class="md">Intercept corrupted audio and surveillance loops. Tilt the phone to use the gyroscope, dial into clear radio frequencies, and scrub the static for hidden voice codes.</div></div>
+      </div>
+    </section>
+
+    <!-- 4. SELECT PROJECT -->
+    <section>
+      <h2>Choose Your Case File<span class="q">SELECT YOUR ACTIVE PROJECT</span></h2>
+      <div class="cases">
+        <div class="case eclipse">
+          <div class="cid">📂 PROJECT 01</div><div class="cn">ECLIPSE · Cyber-Thriller</div>
+          <div class="quote">“Facility AI locked down Sector B. Agent Vance is running out of oxygen.”</div>
+          <div class="meta">Focus: terminal hacks, frequency tuning, network override keys · Difficulty ⚡⚡⚡ Medium</div>
+        </div>
+        <div class="case blackout">
+          <div class="cid">📂 PROJECT 02</div><div class="cn">BLACKOUT · Paranormal Horror</div>
+          <div class="quote">“An abandoned psychiatric ward broadcasting live thermal audio from 1984.”</div>
+          <div class="meta">Focus: thermal inspection, spatial audio scrubbing, hidden ink · Difficulty ⚡⚡⚡⚡ Hard</div>
+        </div>
+        <div class="case">
+          <div class="cid">📂 PROJECT 03</div><div class="cn">THE COURIER · Espionage</div>
+          <div class="quote">“Intercept a dead-drop briefcase before rival agents locate the drop point.”</div>
+          <div class="meta">Focus: dual stencil matching, safe-dial haptics, speed deduction · Difficulty ⚡⚡ Entry</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. SHIFT SELECTION -->
+    <section>
+      <h2>Your Schedule. Your Suspense.<span class="q">DYNAMIC SHIFT SELECTION</span></h2>
+      <div class="shift">
+        <div class="opt">🌇 TWILIGHT SHIFT <span>07:00 PM – 08:00 PM</span></div>
+        <div class="opt rec">🌆 EVENING SHIFT <span>09:00 PM – 10:00 PM · RECOMMENDED</span></div>
+        <div class="opt">🕯️ NIGHT OWL <span>11:00 PM – 12:00 AM</span></div>
+        <div class="od">⚡ Or select ON-DEMAND to trigger your 60-minute timer any time after dark.</div>
+      </div>
+    </section>
+
+    <!-- 6. SOCIAL PROOF -->
+    <section>
+      <div class="stat">72% OF AGENTS TERMINATED TONIGHT.</div>
+      <p class="lede" style="text-align:center;margin:16px auto;">Did you survive Case #042? Generate a spoiler-free, Wordle-style dossier of your survival time
+        and clearance and post it straight to Stories or TikTok — then join the debriefing room.</p>
+      <p class="links" style="text-align:center;">
+        <a href="https://www.reddit.com/r/1HOURgame/" target="_blank">▸ Join r/1HOURgame post-mortem megathreads</a>
+      </p>
+    </section>
+
+    <!-- 7. FOOTER CTA -->
+    <section class="foot" style="border-bottom:0;">
+      <div class="big">CAN YOU DECRYPT THE DARK?</div>
+      <p class="lede" style="margin:6px auto 18px;">The next signal drops tonight. Download now and prepare your terminal.</p>
+      <div class="btns">
+        <a class="btn and" href="/play">GET 1HOUR ON GOOGLE PLAY</a>
+        <a class="btn ios" href="#" onclick="return false">APP STORE — SOON</a>
+      </div>
+      <div class="social">Reddit: r/1HOURgame · Instagram: @1HOURapp · TikTok: @1HOURapp</div>
+      <div class="copyright">© 2026 1HOUR Interactive. All evidence self-destructs upon expiry.</div>
+    </section>
+
+  </div>
+
+  <script>
+    // Countdown to the next daily "global drop" — the Evening Shift start, 21:00 local.
+    function nextDrop(){
+      const now = new Date();
+      const d = new Date(now);
+      d.setHours(21,0,0,0);
+      if (d <= now) d.setDate(d.getDate()+1);
+      return d;
+    }
+    function tick(){
+      const diff = Math.max(0, nextDrop() - new Date());
+      const s = Math.floor(diff/1000);
+      const hh = String(Math.floor(s/3600)).padStart(2,'0');
+      const mm = String(Math.floor((s%3600)/60)).padStart(2,'0');
+      const ss = String(s%60).padStart(2,'0');
+      document.getElementById('countdown').textContent = `${hh} : ${mm} : ${ss}`;
+    }
+    tick(); setInterval(tick,1000);
+  </script>
 </body>
 </html>
