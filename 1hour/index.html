@@ -245,23 +245,28 @@
       var dpr = Math.min(window.devicePixelRatio||1, 2);
       function size(){ cv.width = innerWidth*dpr; cv.height = innerHeight*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
       size();
-      var glyphs = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789';
-      var fs = 13, cols = Math.floor(innerWidth / fs);      // denser columns
+      // A readable mix of scripts: Latin, digits, Japanese katakana, Korean
+      // hangul, and symbols — so each cell reads as an actual character.
+      var glyphs = ('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+        + 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ'
+        + '가나다라마바사아자차카타파하기니디리미비시이지'
+        + '#$%&@?/\\<>*+=§¥Ø').split('');
+      var fs = 12, cols = Math.floor(innerWidth / fs);      // a bit denser
       var drops = new Array(cols).fill(0).map(function(){ return Math.random()*-40; });
       var raf;
       function frame(){
-        ctx.fillStyle = 'rgba(0,0,0,0.09)';                // low fade => longer matrix trails
+        ctx.fillStyle = 'rgba(0,0,0,0.11)';                // a touch more fade
         ctx.fillRect(0,0,innerWidth,innerHeight);
-        ctx.font = fs+'px monospace';
+        ctx.font = '700 '+fs+'px monospace';               // bolder => crisper letters
+        ctx.textBaseline = 'top';
         for(var i=0;i<cols;i++){
-          var g = glyphs[(Math.random()*glyphs.length)|0];
           var yy = drops[i]*fs;
-          ctx.fillStyle = 'rgba(255,110,120,0.65)';        // dimmer head
-          ctx.fillText(g, i*fs, yy);
-          ctx.fillStyle = 'rgba(210,40,52,0.35)';          // dim red trail
+          ctx.fillStyle = 'rgba(255,190,195,0.92)';        // bright, crisp leading char
+          ctx.fillText(glyphs[(Math.random()*glyphs.length)|0], i*fs, yy);
+          ctx.fillStyle = 'rgba(205,40,52,0.32)';          // dim red trail char
           ctx.fillText(glyphs[(Math.random()*glyphs.length)|0], i*fs, yy-fs);
           if(yy > innerHeight && Math.random() > 0.99) drops[i] = Math.random()*-20;
-          drops[i] += 0.14 + Math.random()*0.14;           // slower fall
+          drops[i] += 0.10 + Math.random()*0.10;           // slower fall
         }
         raf = requestAnimationFrame(frame);
       }
