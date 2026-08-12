@@ -101,7 +101,7 @@
         the clock hits zero.</p>
 
       <div class="clock">
-        <div class="lbl">⏱ NEXT GLOBAL DROP IN</div>
+        <div class="lbl">⏱ NEXT ACCESS IN</div>
         <div class="val" id="countdown">--:--:--</div>
       </div>
 
@@ -208,16 +208,14 @@
   </div>
 
   <script>
-    // Countdown to the next daily "global drop" — the Evening Shift start, 21:00 local.
-    function nextDrop(){
-      const now = new Date();
-      const d = new Date(now);
-      d.setHours(21,0,0,0);
-      if (d <= now) d.setDate(d.getDate()+1);
+    // Personal daily access resets at local midnight — one hour per day.
+    function nextAccess(){
+      const d = new Date();
+      d.setHours(24,0,0,0); // upcoming midnight
       return d;
     }
     function tick(){
-      const diff = Math.max(0, nextDrop() - new Date());
+      const diff = Math.max(0, nextAccess() - new Date());
       const s = Math.floor(diff/1000);
       const hh = String(Math.floor(s/3600)).padStart(2,'0');
       const mm = String(Math.floor((s%3600)/60)).padStart(2,'0');
