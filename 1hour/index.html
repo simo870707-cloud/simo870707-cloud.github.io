@@ -250,7 +250,7 @@
         + '가나다라마바사아자차카타파하기니디리미비시이지'
         + '#$%&@?/\\<>*+=§¥Ø').split('');
       var rand = function(){ return glyphs[(Math.random()*glyphs.length)|0]; };
-      var fs = 22, cw = fs, lh = Math.round(fs*1.25);
+      var fs = 9, cw = fs, lh = Math.round(fs*1.3);        // 60% smaller glyphs
       var cols, rows, grid, offset = 0, raf;
       function build(){
         cols = Math.ceil(innerWidth/cw) + 1;
