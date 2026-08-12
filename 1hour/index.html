@@ -22,7 +22,7 @@
     #welcome{ position:fixed; inset:0; z-index:9999; background:#000; display:flex;
       align-items:center; justify-content:center; overflow:hidden;
       animation:welcomeFade 4s ease forwards; }
-    #welcome #rain{ position:absolute; inset:0; z-index:1; opacity:.85; }
+    #welcome #rain{ position:absolute; inset:0; z-index:1; opacity:.5; }
     #welcome img{ position:relative; z-index:2; max-width:92%; max-height:80%; object-fit:contain;
       filter:drop-shadow(0 0 40px rgba(0,0,0,.9));
       animation:welcomeZoom 4s ease forwards; }
@@ -246,22 +246,22 @@
       function size(){ cv.width = innerWidth*dpr; cv.height = innerHeight*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
       size();
       var glyphs = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789';
-      var fs = 18, cols = Math.floor(innerWidth / fs);
+      var fs = 13, cols = Math.floor(innerWidth / fs);      // denser columns
       var drops = new Array(cols).fill(0).map(function(){ return Math.random()*-40; });
       var raf;
       function frame(){
-        ctx.fillStyle = 'rgba(0,0,0,0.14)';
+        ctx.fillStyle = 'rgba(0,0,0,0.09)';                // low fade => longer matrix trails
         ctx.fillRect(0,0,innerWidth,innerHeight);
         ctx.font = fs+'px monospace';
         for(var i=0;i<cols;i++){
           var g = glyphs[(Math.random()*glyphs.length)|0];
           var yy = drops[i]*fs;
-          ctx.fillStyle = 'rgba(255,120,130,0.9)';        // bright head
+          ctx.fillStyle = 'rgba(255,110,120,0.65)';        // dimmer head
           ctx.fillText(g, i*fs, yy);
-          ctx.fillStyle = 'rgba(255,59,71,0.55)';         // red trail
+          ctx.fillStyle = 'rgba(210,40,52,0.35)';          // dim red trail
           ctx.fillText(glyphs[(Math.random()*glyphs.length)|0], i*fs, yy-fs);
-          if(yy > innerHeight && Math.random() > 0.985) drops[i] = Math.random()*-20;
-          drops[i] += 0.3 + Math.random()*0.25;
+          if(yy > innerHeight && Math.random() > 0.99) drops[i] = Math.random()*-20;
+          drops[i] += 0.14 + Math.random()*0.14;           // slower fall
         }
         raf = requestAnimationFrame(frame);
       }
