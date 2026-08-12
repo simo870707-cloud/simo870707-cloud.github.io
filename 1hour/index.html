@@ -279,20 +279,18 @@
       return function(){ cancelAnimationFrame(raf); };
     }
 
-    // OPEN 1HOUR: try the app deep link; if the app isn't installed (nothing
-    // happens), fall back to the Android download after a short beat.
+    // OPEN 1HOUR. On Android we use an intent:// URL: the OS opens the app if
+    // it's installed, and only follows browser_fallback_url (the APK) if it is
+    // NOT installed — no unreliable timers. On non-Android (desktop/iOS) there's
+    // nothing to open, so the button downloads.
     var APK = 'https://github.com/simo870707-cloud/onehour-releases/releases/download/eclipse-preview/1HOUR-Eclipse.apk';
-    document.querySelectorAll('a.btn.open').forEach(function(a){
-      a.addEventListener('click', function(e){
-        e.preventDefault();
-        var t = Date.now();
-        var fallback = setTimeout(function(){
-          if (Date.now() - t < 2000) window.location.href = APK; // still here => app not installed
-        }, 800);
-        window.addEventListener('blur', function(){ clearTimeout(fallback); }, { once:true });
-        window.location.href = 'onehour://';
-      });
-    });
+    var PKG = 'netsim.software.onehour';
+    var isAndroid = /Android/i.test(navigator.userAgent);
+    var openHref = isAndroid
+      ? 'intent://open/#Intent;scheme=onehour;package=' + PKG +
+        ';S.browser_fallback_url=' + encodeURIComponent(APK) + ';end'
+      : APK;
+    document.querySelectorAll('a.btn.open').forEach(function(a){ a.setAttribute('href', openHref); });
   </script>
 </body>
 </html>
