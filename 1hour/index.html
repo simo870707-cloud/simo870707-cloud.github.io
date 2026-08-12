@@ -22,7 +22,7 @@
     #welcome{ position:fixed; inset:0; z-index:9999; background:#000; display:flex;
       align-items:center; justify-content:center; overflow:hidden;
       animation:welcomeFade 4s ease forwards; }
-    #welcome #rain{ position:absolute; inset:0; z-index:1; opacity:.5; }
+    #welcome #rain{ position:absolute; inset:0; z-index:1; opacity:.8; }
     #welcome img{ position:relative; z-index:2; max-width:92%; max-height:80%; object-fit:contain;
       filter:drop-shadow(0 0 40px rgba(0,0,0,.9));
       animation:welcomeZoom 4s ease forwards; }
@@ -238,35 +238,39 @@
       w.addEventListener('click', function(){ w.style.transition='opacity .4s ease'; w.style.opacity='0'; setTimeout(remove,400); });
     })();
 
-    // Red katakana matrix rain — runs until stop() is called.
+    // A slow curtain of clearly-visible red letters — a full grid of glyphs
+    // scrolling straight down at a gentle pace. No trails, no fade.
     function runRain(){
       var cv = document.getElementById('rain'); if(!cv) return function(){};
       var ctx = cv.getContext('2d');
       var dpr = Math.min(window.devicePixelRatio||1, 2);
-      function size(){ cv.width = innerWidth*dpr; cv.height = innerHeight*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
-      size();
-      // A readable mix of scripts: Latin, digits, Japanese katakana, Korean
-      // hangul, and symbols — so each cell reads as an actual character.
+      // Mixed scripts: Latin, digits, Japanese katakana, Korean hangul, symbols.
       var glyphs = ('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
         + 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ'
         + '가나다라마바사아자차카타파하기니디리미비시이지'
         + '#$%&@?/\\<>*+=§¥Ø').split('');
-      var fs = 12, cols = Math.floor(innerWidth / fs);      // a bit denser
-      var drops = new Array(cols).fill(0).map(function(){ return Math.random()*-40; });
-      var raf;
+      var rand = function(){ return glyphs[(Math.random()*glyphs.length)|0]; };
+      var fs = 22, cw = fs, lh = Math.round(fs*1.25);
+      var cols, rows, grid, offset = 0, raf;
+      function build(){
+        cols = Math.ceil(innerWidth/cw) + 1;
+        rows = Math.ceil(innerHeight/lh) + 2;
+        grid = [];
+        for(var c=0;c<cols;c++){ grid[c]=[]; for(var r=0;r<rows;r++) grid[c][r]=rand(); }
+      }
+      function size(){ cv.width = innerWidth*dpr; cv.height = innerHeight*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); build(); }
+      size();
+      ctx.textBaseline = 'top';
       function frame(){
-        ctx.fillStyle = 'rgba(0,0,0,0.11)';                // a touch more fade
-        ctx.fillRect(0,0,innerWidth,innerHeight);
-        ctx.font = '700 '+fs+'px monospace';               // bolder => crisper letters
-        ctx.textBaseline = 'top';
-        for(var i=0;i<cols;i++){
-          var yy = drops[i]*fs;
-          ctx.fillStyle = 'rgba(255,190,195,0.92)';        // bright, crisp leading char
-          ctx.fillText(glyphs[(Math.random()*glyphs.length)|0], i*fs, yy);
-          ctx.fillStyle = 'rgba(205,40,52,0.32)';          // dim red trail char
-          ctx.fillText(glyphs[(Math.random()*glyphs.length)|0], i*fs, yy-fs);
-          if(yy > innerHeight && Math.random() > 0.99) drops[i] = Math.random()*-20;
-          drops[i] += 0.10 + Math.random()*0.10;           // slower fall
+        ctx.clearRect(0,0,innerWidth,innerHeight);       // no fade — clean each frame
+        ctx.font = fs+'px monospace';
+        ctx.fillStyle = 'rgba(255,45,58,0.95)';          // solid, visible red
+        offset += 0.5;                                   // slow curtain
+        if(offset >= lh){ offset -= lh;
+          for(var c=0;c<cols;c++){ grid[c].pop(); grid[c].unshift(rand()); }  // scroll one row
+        }
+        for(var c=0;c<cols;c++){
+          for(var r=0;r<rows;r++){ ctx.fillText(grid[c][r], c*cw, r*lh - lh + offset); }
         }
         raf = requestAnimationFrame(frame);
       }
