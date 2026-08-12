@@ -18,6 +18,16 @@
     body::before{ content:""; position:fixed; inset:0; pointer-events:none; z-index:2;
       background:repeating-linear-gradient(0deg, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,.14) 3px); mix-blend-mode:multiply; }
     .wrap{ max-width:820px; margin:0 auto; padding:0 20px; position:relative; z-index:1; }
+    /* Welcome splash: full-screen hero, hold 3s, fade out ~1s, then remove */
+    #welcome{ position:fixed; inset:0; z-index:9999; background:#000; display:flex;
+      align-items:center; justify-content:center; overflow:hidden;
+      animation:welcomeFade 4s ease forwards; }
+    #welcome img{ width:100%; height:100%; object-fit:contain;
+      animation:welcomeZoom 4s ease forwards; }
+    @keyframes welcomeFade{ 0%,72%{ opacity:1; } 100%{ opacity:0; visibility:hidden; } }
+    @keyframes welcomeZoom{ 0%{ transform:scale(1.06); } 75%{ transform:scale(1.0); } 100%{ transform:scale(1.0); } }
+    #welcome.done{ display:none; }
+    @media (prefers-reduced-motion:reduce){ #welcome{ animation-duration:3.2s; } #welcome img{ animation:none; } }
     section{ padding:56px 0; border-bottom:1px solid #0d2c1f; }
     .tag{ color:var(--grn); font-size:11px; letter-spacing:4px; border:1px solid var(--bd); display:inline-block; padding:5px 10px; }
     h1{ font-family:"Cinzel",serif; font-size:clamp(40px,10vw,76px); margin:18px 0 6px; letter-spacing:2px; color:#eafff4;
@@ -66,6 +76,11 @@
   </style>
 </head>
 <body>
+  <!-- 0. WELCOME SPLASH — full-screen hero for 3s, then fades into the page -->
+  <div id="welcome" aria-hidden="true">
+    <img src="hero.png?v=4" alt="1HOUR — Time can kill" />
+  </div>
+
   <div class="wrap">
 
     <!-- 1. HERO -->
@@ -202,6 +217,15 @@
       document.getElementById('countdown').textContent = `${hh} : ${mm} : ${ss}`;
     }
     tick(); setInterval(tick,1000);
+
+    // Welcome splash: remove after the fade completes; allow tap/click to skip.
+    (function(){
+      var w = document.getElementById('welcome');
+      if(!w) return;
+      var remove = function(){ w.classList.add('done'); };
+      setTimeout(remove, 4100);
+      w.addEventListener('click', function(){ w.style.transition='opacity .4s ease'; w.style.opacity='0'; setTimeout(remove,400); });
+    })();
 
     // OPEN 1HOUR: try the app deep link; if the app isn't installed (nothing
     // happens), fall back to the Android download after a short beat.
