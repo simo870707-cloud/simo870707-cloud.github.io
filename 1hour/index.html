@@ -34,10 +34,12 @@
       text-shadow:0 0 22px rgba(255,59,71,.55), 0 0 4px rgba(255,59,71,.9); }
     .tagline.pulse{ animation:warnPulse 1.4s ease-in-out infinite; }
     @keyframes warnPulse{ 0%,100%{ opacity:1; } 50%{ opacity:.72; } }
+    .tagline.restore{ transition:opacity 1s ease; }   /* fade back in after the fall */
     /* Falling letters + katakana rain */
-    #rain{ position:fixed; inset:0; z-index:60; pointer-events:none; opacity:0; transition:opacity .6s ease; }
+    #rain{ position:fixed; inset:0; z-index:60; pointer-events:none; opacity:0; transition:opacity 1s ease; }
     .fall{ position:fixed; z-index:61; color:var(--red); font-weight:800; pointer-events:none;
-      text-shadow:0 0 14px rgba(255,59,71,.7); transition:transform 1.8s cubic-bezier(.5,.05,.6,1), opacity 1.8s ease; }
+      text-shadow:0 0 14px rgba(255,59,71,.7);
+      transition:transform 4.4s cubic-bezier(.33,0,.5,1), opacity 4.4s ease; }
     section{ padding:56px 0; border-bottom:1px solid #0d2c1f; }
     .tag{ color:var(--grn); font-size:11px; letter-spacing:4px; border:1px solid var(--bd); display:inline-block; padding:5px 10px; }
     h1{ font-family:"Cinzel",serif; font-size:clamp(40px,10vw,76px); margin:18px 0 6px; letter-spacing:2px; color:#eafff4;
@@ -272,19 +274,29 @@
       }
       el.style.visibility = 'hidden';
 
-      // 2) rain, then let the letters fall to scattered spots at the bottom
-      runRain(2600);
+      // 2) gentle rain; letters drift slowly down and FADE OUT (nothing stays
+      //    at the bottom), then the clean red tagline fades back in near the hero.
+      runRain(5200);
       var vh = window.innerHeight;
       chars.forEach(function(span, i){
         var landX = (Math.random()*0.86 + 0.05) * window.innerWidth - span.getBoundingClientRect().width/2;
         var dx = landX - span.getBoundingClientRect().left;
-        var dy = (vh - 46 - Math.random()*26) - span.getBoundingClientRect().top;
-        var rot = (Math.random()*70 - 35);
+        var dy = (vh + 60) - span.getBoundingClientRect().top;   // fall past the bottom edge
+        var rot = (Math.random()*40 - 20);
         setTimeout(function(){
           span.style.transform = 'translate('+dx+'px,'+dy+'px) rotate('+rot+'deg)';
-          span.style.opacity = '0.9';
-        }, 120 + i*90);
+          span.style.opacity = '0';                              // fade to nothing as it falls
+        }, 200 + i*160);
       });
+      // remove the fallen letters, then restore the readable tagline
+      var total = 200 + chars.length*160 + 4400;
+      setTimeout(function(){
+        chars.forEach(function(s){ s.remove(); });
+        el.style.opacity = '0';
+        el.style.visibility = 'visible';
+        el.classList.add('restore');
+        requestAnimationFrame(function(){ el.style.opacity = '1'; });
+      }, total);
     }
 
     // Red katakana matrix rain for `ms`, then fade out.
@@ -310,8 +322,8 @@
           ctx.fillText(g, i*fs, yy);
           ctx.fillStyle = 'rgba(255,59,71,0.55)';         // red trail
           ctx.fillText(glyphs[(Math.random()*glyphs.length)|0], i*fs, yy-fs);
-          if(yy > innerHeight && Math.random() > 0.975) drops[i] = Math.random()*-20;
-          drops[i] += 0.6 + Math.random()*0.5;
+          if(yy > innerHeight && Math.random() > 0.985) drops[i] = Math.random()*-20;
+          drops[i] += 0.3 + Math.random()*0.25;
         }
         if(t - start < ms){ raf = requestAnimationFrame(frame); }
         else { cv.style.opacity = '0'; setTimeout(function(){ cancelAnimationFrame(raf); ctx.clearRect(0,0,cv.width,cv.height); }, 650); }
