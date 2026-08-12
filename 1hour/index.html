@@ -7,7 +7,7 @@
   <meta name="description" content="1HOUR turns your phone into an active crime-scene terminal. One case. One hour. Sixty minutes before the file self-destructs." />
   <meta property="og:title" content="1HOUR — Decrypt the Dark" />
   <meta property="og:description" content="Real-time investigations. Corrupt feeds. Hardware puzzles. Solve before the clock hits zero — or the evidence wipes forever." />
-  <meta property="og:image" content="hero.png?v=4" />
+  <meta property="og:image" content="hero.png?v=5" />
   <meta name="theme-color" content="#04120c" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Cinzel:wght@700&display=swap" rel="stylesheet" />
@@ -23,8 +23,8 @@
       align-items:center; justify-content:center; overflow:hidden;
       animation:welcomeFade 4s ease forwards; }
     #welcome #rain{ position:absolute; inset:0; z-index:1; opacity:.8; }
-    #welcome img{ position:relative; z-index:2; max-width:92%; max-height:80%; object-fit:contain;
-      filter:drop-shadow(0 0 40px rgba(0,0,0,.9));
+    #welcome img{ position:relative; z-index:2; max-width:99%; max-height:92%; object-fit:contain;
+      filter:drop-shadow(0 0 60px rgba(0,0,0,.9));
       animation:welcomeZoom 4s ease forwards; }
     @keyframes welcomeFade{ 0%,72%{ opacity:1; } 100%{ opacity:0; visibility:hidden; } }
     @keyframes welcomeZoom{ 0%{ transform:scale(1.06); } 75%{ transform:scale(1.0); } 100%{ transform:scale(1.0); } }
@@ -85,7 +85,7 @@
   <!-- 0. WELCOME SPLASH — hero over red katakana rain, ~3s, then fades away -->
   <div id="welcome" aria-hidden="true">
     <canvas id="rain"></canvas>
-    <img src="hero.png?v=4" alt="1HOUR — Time can kill" />
+    <img src="hero.png?v=5" alt="1HOUR — Time can kill" />
   </div>
 
   <div class="wrap">
