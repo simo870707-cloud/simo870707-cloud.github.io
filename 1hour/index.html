@@ -130,6 +130,21 @@
           <div class="quote">“Intercept a dead-drop briefcase before rival agents locate the drop point.”</div>
           <div class="meta">Focus: dual stencil matching, safe-dial haptics, speed deduction · Difficulty ⚡⚡ Entry</div>
         </div>
+        <div class="case" style="border-color:#155e6b">
+          <div class="cid">📂 PROJECT 04</div><div class="cn" style="color:#22d3ee">SECTOR B EMERGENCY · Facility Breach</div>
+          <div class="quote">“A thermal disassembler is unmaking Sector B. Breach, contain, and kill it before dawn.”</div>
+          <div class="meta">Focus: acoustic resonance lock, dark-grid overload, ghost triangulation, pressure valves, override decryption · Difficulty ⚡⚡⚡⚡ Hard</div>
+        </div>
+        <div class="case" style="border-color:#4c3a7a">
+          <div class="cid">📂 PROJECT 05</div><div class="cn" style="color:#a78bfa">ORBIT DECAY · Orbital Thriller</div>
+          <div class="quote">“Station Helios is falling out of the sky. Someone sabotaged the burn code — reboost before re-entry.”</div>
+          <div class="meta">Focus: uplink handshake, cipher telemetry, reactor stabilization, debris intercept, reboost override · Difficulty ⚡⚡⚡⚡ Hard</div>
+        </div>
+        <div class="case" style="border-color:#7a4a1e">
+          <div class="cid">📂 PROJECT 06</div><div class="cn" style="color:#fb923c">NIGHT TRAIN · Heist</div>
+          <div class="quote">“One shipment that doesn’t exist, one tunnel to escape. Crack the vault before the 9 reaches the city.”</div>
+          <div class="meta">Focus: cipher lockbox, cable-car cascade, Vigenère manifest, seal-break valves, master override · Difficulty ⚡⚡⚡⚡ Hard</div>
+        </div>
       </div>
     </section>
 
@@ -187,6 +202,21 @@
       document.getElementById('countdown').textContent = `${hh} : ${mm} : ${ss}`;
     }
     tick(); setInterval(tick,1000);
+
+    // OPEN 1HOUR: try the app deep link; if the app isn't installed (nothing
+    // happens), fall back to the Android download after a short beat.
+    var APK = 'https://github.com/simo870707-cloud/onehour-releases/releases/download/eclipse-preview/1HOUR-Eclipse.apk';
+    document.querySelectorAll('a.btn.open').forEach(function(a){
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        var t = Date.now();
+        var fallback = setTimeout(function(){
+          if (Date.now() - t < 2000) window.location.href = APK; // still here => app not installed
+        }, 800);
+        window.addEventListener('blur', function(){ clearTimeout(fallback); }, { once:true });
+        window.location.href = 'onehour://';
+      });
+    });
   </script>
 </body>
 </html>
