@@ -21,13 +21,13 @@
     /* Welcome splash: hero over red katakana rain, hold ~3s, fade out ~1s */
     #welcome{ position:fixed; inset:0; z-index:9999; background:#000; display:flex;
       align-items:center; justify-content:center; overflow:hidden;
-      animation:welcomeFade 4s ease forwards; }
+      animation:welcomeFade 5.4s ease forwards; }
     #welcome #rain{ position:absolute; inset:0; z-index:1; opacity:.8; }
     #welcome img{ position:relative; z-index:2; max-width:99%; max-height:92%; object-fit:contain;
-      filter:drop-shadow(0 0 60px rgba(0,0,0,.9));
-      animation:welcomeZoom 4s ease forwards; }
-    @keyframes welcomeFade{ 0%,72%{ opacity:1; } 100%{ opacity:0; visibility:hidden; } }
-    @keyframes welcomeZoom{ 0%{ transform:scale(1.06); } 75%{ transform:scale(1.0); } 100%{ transform:scale(1.0); } }
+      filter:drop-shadow(0 0 60px rgba(0,0,0,.9)); transform-origin:center center;
+      animation:welcomeZoom 5.4s ease-out forwards; }
+    @keyframes welcomeFade{ 0%,30%{ opacity:1; } 100%{ opacity:0; visibility:hidden; } }
+    @keyframes welcomeZoom{ 0%{ transform:scale(1.55); } 100%{ transform:scale(0.8); } }
     #welcome.done{ display:none; }
     @media (prefers-reduced-motion:reduce){ #welcome{ animation-duration:3.2s; } #welcome img{ animation:none; } }
     /* Big red warning tagline under the hero — sized to fit on one line */
@@ -234,7 +234,7 @@
       var stop = runRain();
       var fired = false;
       var remove = function(){ if(fired) return; fired = true; w.classList.add('done'); if(stop) stop(); };
-      setTimeout(remove, 4100);
+      setTimeout(remove, 5500);
       w.addEventListener('click', function(){ w.style.transition='opacity .4s ease'; w.style.opacity='0'; setTimeout(remove,400); });
     })();
 
