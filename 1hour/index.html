@@ -287,7 +287,7 @@
     var PKG = 'netsim.software.onehour';
     var isAndroid = /Android/i.test(navigator.userAgent);
     var openHref = isAndroid
-      ? 'intent://open/#Intent;scheme=onehour;package=' + PKG +
+      ? 'intent://#Intent;scheme=onehour;package=' + PKG +
         ';S.browser_fallback_url=' + encodeURIComponent(APK) + ';end'
       : APK;
     document.querySelectorAll('a.btn.open').forEach(function(a){ a.setAttribute('href', openHref); });
