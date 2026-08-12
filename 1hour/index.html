@@ -28,6 +28,16 @@
     @keyframes welcomeZoom{ 0%{ transform:scale(1.06); } 75%{ transform:scale(1.0); } 100%{ transform:scale(1.0); } }
     #welcome.done{ display:none; }
     @media (prefers-reduced-motion:reduce){ #welcome{ animation-duration:3.2s; } #welcome img{ animation:none; } }
+    /* Big red warning tagline near the hero */
+    .tagline{ color:var(--red); font-weight:800; letter-spacing:.14em; line-height:1;
+      font-size:clamp(34px,10vw,72px); margin:6px 0 14px;
+      text-shadow:0 0 22px rgba(255,59,71,.55), 0 0 4px rgba(255,59,71,.9); }
+    .tagline.pulse{ animation:warnPulse 1.4s ease-in-out infinite; }
+    @keyframes warnPulse{ 0%,100%{ opacity:1; } 50%{ opacity:.72; } }
+    /* Falling letters + katakana rain */
+    #rain{ position:fixed; inset:0; z-index:60; pointer-events:none; opacity:0; transition:opacity .6s ease; }
+    .fall{ position:fixed; z-index:61; color:var(--red); font-weight:800; pointer-events:none;
+      text-shadow:0 0 14px rgba(255,59,71,.7); transition:transform 1.8s cubic-bezier(.5,.05,.6,1), opacity 1.8s ease; }
     section{ padding:56px 0; border-bottom:1px solid #0d2c1f; }
     .tag{ color:var(--grn); font-size:11px; letter-spacing:4px; border:1px solid var(--bd); display:inline-block; padding:5px 10px; }
     h1{ font-family:"Cinzel",serif; font-size:clamp(40px,10vw,76px); margin:18px 0 6px; letter-spacing:2px; color:#eafff4;
@@ -80,6 +90,7 @@
   <div id="welcome" aria-hidden="true">
     <img src="hero.png?v=4" alt="1HOUR — Time can kill" />
   </div>
+  <canvas id="rain"></canvas>
 
   <div class="wrap">
 
@@ -87,6 +98,7 @@
     <section>
       <span class="tag">CLASSIFIED SYSTEM // DIRECTIVE 01</span>
       <h1>DECRYPT<br/>THE DARK.</h1>
+      <div id="tagline" class="tagline" aria-label="Time can kill">TIME CAN KILL</div>
       <p class="sub">One Case. One Hour. Sixty Minutes Before the File Self-Destructs.</p>
       <p class="lede">1HOUR turns your phone into an active crime-scene terminal. Enter real-time
         investigations, cross-reference corrupt feeds, and solve physical hardware puzzles before
@@ -221,11 +233,92 @@
     // Welcome splash: remove after the fade completes; allow tap/click to skip.
     (function(){
       var w = document.getElementById('welcome');
-      if(!w) return;
-      var remove = function(){ w.classList.add('done'); };
+      if(!w){ startTagline(); return; }
+      var fired = false;
+      var remove = function(){ if(fired) return; fired = true; w.classList.add('done'); startTagline(); };
       setTimeout(remove, 4100);
       w.addEventListener('click', function(){ w.style.transition='opacity .4s ease'; w.style.opacity='0'; setTimeout(remove,400); });
     })();
+
+    // TIME CAN KILL — the letters break apart and rain to the bottom (and stay
+    // scattered), with red katakana rain trailing for a Japanese-script feel.
+    function startTagline(){
+      var el = document.getElementById('tagline');
+      if(!el || el.dataset.done) return;
+      el.dataset.done = '1';
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(reduce){ el.classList.add('pulse'); return; }
+
+      // 1) spawn fixed-position copies of each letter at its on-screen spot
+      var text = 'TIME CAN KILL';
+      var rect = el.getBoundingClientRect();
+      var cs = getComputedStyle(el);
+      var size = parseFloat(cs.fontSize);
+      var x = rect.left, spacing = size * 0.14;
+      var chars = [];
+      for(var i=0;i<text.length;i++){
+        var ch = text[i];
+        var span = document.createElement('span');
+        span.className = 'fall';
+        span.textContent = ch;
+        span.style.left = x + 'px';
+        span.style.top = rect.top + 'px';
+        span.style.fontSize = size + 'px';
+        // approximate advance width (monospace-ish); measure for accuracy
+        document.body.appendChild(span);
+        var adv = span.getBoundingClientRect().width + spacing;
+        x += adv;
+        if(ch !== ' ') chars.push(span); else span.remove();
+      }
+      el.style.visibility = 'hidden';
+
+      // 2) rain, then let the letters fall to scattered spots at the bottom
+      runRain(2600);
+      var vh = window.innerHeight;
+      chars.forEach(function(span, i){
+        var landX = (Math.random()*0.86 + 0.05) * window.innerWidth - span.getBoundingClientRect().width/2;
+        var dx = landX - span.getBoundingClientRect().left;
+        var dy = (vh - 46 - Math.random()*26) - span.getBoundingClientRect().top;
+        var rot = (Math.random()*70 - 35);
+        setTimeout(function(){
+          span.style.transform = 'translate('+dx+'px,'+dy+'px) rotate('+rot+'deg)';
+          span.style.opacity = '0.9';
+        }, 120 + i*90);
+      });
+    }
+
+    // Red katakana matrix rain for `ms`, then fade out.
+    function runRain(ms){
+      var cv = document.getElementById('rain'); if(!cv) return;
+      var ctx = cv.getContext('2d');
+      var dpr = Math.min(window.devicePixelRatio||1, 2);
+      function size(){ cv.width = innerWidth*dpr; cv.height = innerHeight*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+      size();
+      var glyphs = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789';
+      var fs = 18, cols = Math.floor(innerWidth / fs);
+      var drops = new Array(cols).fill(0).map(function(){ return Math.random()*-40; });
+      cv.style.opacity = '1';
+      var start = performance.now(), raf;
+      function frame(t){
+        ctx.fillStyle = 'rgba(4,18,12,0.16)';
+        ctx.fillRect(0,0,innerWidth,innerHeight);
+        ctx.font = fs+'px monospace';
+        for(var i=0;i<cols;i++){
+          var g = glyphs[(Math.random()*glyphs.length)|0];
+          var yy = drops[i]*fs;
+          ctx.fillStyle = 'rgba(255,120,130,0.9)';        // bright head
+          ctx.fillText(g, i*fs, yy);
+          ctx.fillStyle = 'rgba(255,59,71,0.55)';         // red trail
+          ctx.fillText(glyphs[(Math.random()*glyphs.length)|0], i*fs, yy-fs);
+          if(yy > innerHeight && Math.random() > 0.975) drops[i] = Math.random()*-20;
+          drops[i] += 0.6 + Math.random()*0.5;
+        }
+        if(t - start < ms){ raf = requestAnimationFrame(frame); }
+        else { cv.style.opacity = '0'; setTimeout(function(){ cancelAnimationFrame(raf); ctx.clearRect(0,0,cv.width,cv.height); }, 650); }
+      }
+      raf = requestAnimationFrame(frame);
+      window.addEventListener('resize', size, { passive:true });
+    }
 
     // OPEN 1HOUR: try the app deep link; if the app isn't installed (nothing
     // happens), fall back to the Android download after a short beat.
