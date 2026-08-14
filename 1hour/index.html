@@ -116,7 +116,7 @@
       </div>
 
       <div class="btns"><a class="btn open" href="onehour://">▶ OPEN 1HOUR APP</a>
-        <a class="btn and" href="1HOUR.apk">📱 DOWNLOAD ON ANDROID</a>
+        <a class="btn and" href="download.html">📱 DOWNLOAD ON ANDROID</a>
       </div>
       <p class="warn">Already installed? Tap <b>OPEN 1HOUR</b>. First time? <b>Download</b>.</p>
       <p class="warn"><strong>🎯 First launch:</strong> 60-minute trial hour — play immediately, then pick your shift for tomorrow.</p>
@@ -208,7 +208,7 @@
       <div class="big">CAN YOU DECRYPT THE DARK?</div>
       <p class="lede center" style="margin:6px auto 18px;">The next signal drops tonight. Download now and prepare your terminal.</p>
       <div class="btns"><a class="btn open" href="onehour://">▶ OPEN 1HOUR APP</a>
-        <a class="btn and" href="1HOUR.apk">GET 1HOUR ON ANDROID</a>
+        <a class="btn and" href="download.html">GET 1HOUR ON ANDROID</a>
       </div>
       <div class="social">NETSIM Software · Reddit: r/1HOURgame</div>
       <div class="copyright">© 2026 1HOUR Interactive. All evidence self-destructs upon expiry.</div>
@@ -307,10 +307,10 @@
     }
 
     // OPEN 1HOUR. On Android we use an intent:// URL: the OS opens the app if
-    // it's installed, and only follows browser_fallback_url (the APK) if it is
+    // it's installed, and only follows browser_fallback_url (the download page) if it is
     // NOT installed — no unreliable timers. On non-Android (desktop/iOS) there's
-    // nothing to open, so the button downloads.
-    var APK = '1HOUR.apk';
+    // nothing to open, so the button goes to download page.
+    var APK = 'download.html';
     var PKG = 'netsim.software.onehour';
     var isAndroid = /Android/i.test(navigator.userAgent);
     var openHref = isAndroid
