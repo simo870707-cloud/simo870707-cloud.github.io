@@ -111,7 +111,7 @@
         the clock hits zero.</p>
 
       <div class="clock">
-        <div class="lbl" id="cdLabel">⏱ DAILY RESET IN</div>
+        <div class="lbl" id="cdLabel">⏱ DAILY RESET OF YOUR SHIFT IN</div>
         <div class="val" id="countdown">--:--:--</div>
       </div>
 
@@ -227,7 +227,7 @@
     }
     function tick(){
       var lbl = document.getElementById('cdLabel'), cd = document.getElementById('countdown');
-      if (lbl) lbl.textContent = '⏱ DAILY RESET IN';
+      if (lbl) lbl.textContent = '⏱ DAILY RESET OF YOUR SHIFT IN';
       var s = Math.floor(msUntilMidnight()/1000);
       var hh = String(Math.floor(s/3600)).padStart(2,'0');
       var mm = String(Math.floor((s%3600)/60)).padStart(2,'0');
