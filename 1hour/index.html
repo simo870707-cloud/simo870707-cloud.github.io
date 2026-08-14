@@ -78,7 +78,7 @@
     .case .quote{ color:var(--text-muted); font-style:italic; font-size:13.5px; line-height:1.6; margin:8px 0; }
     .case .meta{ color:var(--dim); font-size:12px; }
     .shift{ border:1px solid var(--bd); background:var(--clock-bg); border-radius:10px; padding:18px; margin-top:16px; }
-    .shift .opt{ display:flex; justify-content:space-between; padding:11px 12px; border:1px solid var(--border-section); border-radius:8px; margin-bottom:8px; color:var(--text-light); font-size:13px; cursor:pointer; transition:border-color .15s, background .15s; }
+    .shift .opt{ display:flex; justify-content:space-between; padding:11px 12px; border:1px solid var(--border-section); border-radius:8px; margin-bottom:8px; color:var(--text-light); font-size:13px; cursor:default; transition:border-color .15s, background .15s; }
     .shift .opt.sel{ border-color:var(--grn); color:var(--grn); background:#0c2016; }
     .shift .od{ color:var(--dim); font-size:12px; margin-top:6px; }
     .stat{ color:var(--red); font-size:clamp(22px,6vw,32px); font-weight:800; letter-spacing:1px; text-align:center; text-shadow:0 0 18px rgba(255,59,71,.3); }
@@ -111,7 +111,7 @@
         the clock hits zero.</p>
 
       <div class="clock">
-        <div class="lbl" id="cdLabel">⏱ NEXT ACCESS IN</div>
+        <div class="lbl" id="cdLabel">⏱ DAILY RESET IN</div>
         <div class="val" id="countdown">--:--:--</div>
       </div>
 
@@ -183,13 +183,13 @@
 
     <!-- 5. SHIFT SELECTION -->
     <section>
-      <h2>Your Schedule. Your Suspense.<span class="q">DYNAMIC SHIFT SELECTION</span></h2>
+      <h2>Your Schedule. Your Suspense.<span class="q">SHIFT WINDOWS · CHOSEN IN-APP</span></h2>
       <div class="shift">
         <div class="opt" data-key="twilight" data-name="TWILIGHT" data-s="19" data-e="20">🌇 TWILIGHT SHIFT <span>07:00 PM – 08:00 PM</span></div>
         <div class="opt" data-key="evening" data-name="EVENING" data-s="21" data-e="22">🌆 EVENING SHIFT <span>09:00 PM – 10:00 PM · RECOMMENDED</span></div>
         <div class="opt" data-key="nightowl" data-name="NIGHT OWL" data-s="23" data-e="24">🕯️ NIGHT OWL <span>11:00 PM – 12:00 AM</span></div>
         <div class="opt" data-key="insomnia" data-name="INSOMNIA" data-s="0" data-e="6">🌙 INSOMNIA <span>ANY TIME AFTER MIDNIGHT · 12:00–06:00 AM</span></div>
-        <div class="od">🎯 <strong>First launch:</strong> Try your hour immediately (60-minute trial), then pick your shift for tomorrow.<br/>⚡ <strong>One hour per day:</strong> After selection, your shift locks until midnight. Change your shift after midnight. The app is sealed outside your window; the 60-minute clock never pauses.</div>
+        <div class="od">🎯 <strong>First launch:</strong> Try your hour immediately (60-minute trial), then pick your shift for tomorrow.<br/>⚡ <strong>Shift selection happens in the app:</strong> once you choose, the other shifts lock until midnight — one hour per day. These windows show when each shift's hour opens; the clock above counts down to the daily reset.</div>
       </div>
     </section>
 
@@ -217,39 +217,22 @@
   </div>
 
   <script>
-    // Shift-driven countdown — mirrors the app. Pick a shift below and the timer
-    // counts down to when THAT window opens (or shows LIVE while it's open).
-    var opts = Array.prototype.slice.call(document.querySelectorAll('.shift .opt'));
-    var selKey = localStorage.getItem('onehour.shift') || 'evening';
-    function selected(){ return opts.find(function(o){ return o.dataset.key === selKey; }) || opts[1]; }
-    function paint(){ opts.forEach(function(o){ o.classList.toggle('sel', o.dataset.key === selKey); }); }
-    opts.forEach(function(o){
-      o.addEventListener('click', function(){ selKey = o.dataset.key; localStorage.setItem('onehour.shift', selKey); paint(); tick(); });
-    });
-    paint();
-
-    function shiftState(){
-      var o = selected(), s = +o.dataset.s, e = +o.dataset.e, name = o.dataset.name;
-      var now = new Date(), h = now.getHours() + now.getMinutes()/60;
-      var live = (s < e) ? (h >= s && h < e) : (h >= s || h < e);
-      var start = new Date(now); start.setHours(s,0,0,0);
-      if (start <= now) start.setDate(start.getDate()+1);
-      return { live: live, msToStart: start - now, name: name };
+    // Universal daily-reset countdown — counts down to local midnight, the point
+    // at which the "one hour per day" limit resets. Shift selection + locking is
+    // app-only; the site just shows the shift windows and this reset clock.
+    function msUntilMidnight(){
+      var now = new Date();
+      var midnight = new Date(now); midnight.setHours(24,0,0,0);
+      return midnight - now;
     }
     function tick(){
-      var st = shiftState();
       var lbl = document.getElementById('cdLabel'), cd = document.getElementById('countdown');
-      if (st.live){
-        lbl.textContent = '● YOUR ' + st.name + ' SHIFT IS LIVE';
-        cd.textContent = 'PLAY NOW';
-        return;
-      }
-      lbl.textContent = '⏱ YOUR ' + st.name + ' SHIFT OPENS IN';
-      var s = Math.floor(st.msToStart/1000);
+      if (lbl) lbl.textContent = '⏱ DAILY RESET IN';
+      var s = Math.floor(msUntilMidnight()/1000);
       var hh = String(Math.floor(s/3600)).padStart(2,'0');
       var mm = String(Math.floor((s%3600)/60)).padStart(2,'0');
       var ss = String(s%60).padStart(2,'0');
-      cd.textContent = `${hh} : ${mm} : ${ss}`;
+      if (cd) cd.textContent = `${hh} : ${mm} : ${ss}`;
     }
     tick(); setInterval(tick,1000);
 
